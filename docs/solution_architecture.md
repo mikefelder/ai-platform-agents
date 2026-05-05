@@ -1,4 +1,4 @@
-# Unified AI Platform — Solution Architecture
+# AI Agent Platform — Solution Architecture
 
 > A multi-cloud, multi-agent AI platform built on Microsoft Azure with AWS cross-cloud integration.
 > Demonstrates centralized governance, observability, and intelligent orchestration across cloud boundaries.
@@ -7,7 +7,7 @@
 
 ## Platform Overview
 
-The Unified AI Platform is an enterprise AI orchestration platform that centralizes model access, agent coordination, governance, and monitoring across Azure and AWS. It enables users to query engineering knowledge bases, receive compliance analysis, and leverage cross-cloud AI capabilities through a single conversational interface.
+The AI Agent Platform is an enterprise AI orchestration platform that centralizes model access, agent coordination, governance, and monitoring across Azure and AWS. It enables users to query knowledge bases, receive compliance analysis, and leverage cross-cloud AI capabilities through a single conversational interface.
 
 ### Design Principles
 
@@ -27,9 +27,9 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 │                                                                                 │
 │  ┌───────────────────────────────────────────────────────────────────────────┐  │
 │  │                    Azure API Management (AI Gateway)                      │  │
-│  │  /uc1/*  → UC1 RAG Agent       Rate limiting, content safety,            │   │
-│  │  /uc2/*  → UC2 Supervisor       prompt injection detection,              │   │
-│  │  /uc3/*  → UC3 Governance       W3C traceparent injection,               │   │
+│  │  /rag/*  → RAG Agent       Rate limiting, content safety,            │   │
+│  │  /supervisor/*  → Supervisor Agent       prompt injection detection,              │   │
+│  │  /governance/*  → Governance Hub       W3C traceparent injection,               │   │
 │  │  /otel/* → OTEL Collector       request logging for FinOps               │   │
 │  └─────────────────────────────┬─────────────────────────────────────────────┘  │
 │                                │                                                │
@@ -37,7 +37,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 │  │         Azure Container Apps Environment (Internal ILB)                   │  │
 │  │                                                                           │  │
 │  │  ┌─────────────────┐  ┌─────────────────────────────────────────────┐    │   │
-│  │  │  UC1 RAG Agent  │  │  UC2 Supervisor Agent                      │    │    │
+│  │  │  RAG Agent  │  │  Supervisor Agent Agent                      │    │    │
   │  │  gpt-4.1-mini   │  │  (Agent Framework SDK, port 8088)          │    │     │
   │  │  AI Search tool │  │  ┌───────────┐     Fan-out (concurrent)    │    │     │
   │  │  internal-only  │  │  │ Supervisor │──┬──┬──┬──┐                │    │     │
@@ -45,7 +45,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
   │  └─────────────────┘  │  └───────────┘  │  │  │  │                │    │      │
   │                        │   ┌──────┐ ┌────┴┐┌┴───┐┌┴────────┐      │    │      │
   │  ┌─────────────────┐  │   │Know- │ │Comp-││Bed- ││Governan-│      │    │      │
-  │  │  UC3 Governance │  │   │ledge │ │lianc││rock ││ce       │      │    │      │
+  │  │  Governance Hub │  │   │ledge │ │lianc││rock ││ce       │      │    │      │
   │  │  FastAPI :8000  │  │   │4.1m  │ │o4-m ││AWS  ││gpt-4.1  │      │    │      │
 │  │  │  9 API routers  │  │   └──┬───┘ └──┬──┘└──┬──┘└──┬──────┘      │    │     │
 │  │  └─────────────────┘  │      └────────┴───┬──┴──────┘              │    │    │
@@ -69,7 +69,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 │  │gpt-4.1-mini │ │knowledge-   │ │ Workflows │ │ │Microsoft Sentinel │ │       │
 │  │o4-mini      │ │docs (6 docs) │ │           │ │ │5 analytics rules  │ │       │
 │  └──────────────┘ └──────────────┘ └───────────┘ │ └────────────────────┘ │     │
-│                                                    │ App Insights (×3 UCs) │    │
+│                                                    │ App Insights (per service) │    │
 │  ┌──────────────┐ ┌──────────────┐ ┌───────────┐ │ FinOps Workbook       │      │
 │  │ ACR          │ │ Service Bus  │ │Event Grid │ └────────────────────────┘     │
 │  │ genaicri40e  │ │ Incidents    │ │ Triggers  │                                │
@@ -100,25 +100,25 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 
 | Repository | Description | Stack |
 |-----------|-------------|-------|
-| [`uaip-workload-uc1-rag-agent`](https://github.com/{your-org}/ai-platform-agents) | RAG Knowledge Assistant — searches engineering docs, generates cited responses | Agent Framework SDK, Azure AI Search, gpt-4.1-mini |
-| [`uaip-workload-uc2-supervisor-agent`](https://github.com/{your-org}/ai-platform-agents) | Multi-Agent Supervisor — fan-out/fan-in orchestration across 4 agents | Agent Framework SDK WorkflowBuilder, agents.yaml |
-| [`uaip-workload-uc3-governance-hub`](https://github.com/{your-org}/ai-platform-governance) | Governance & Monitoring Hub — observability, costs, policies, incidents | FastAPI, OTEL Collector, Sentinel, Cosmos DB |
-| [`uaip-frontend`](https://github.com/{your-org}/ai-platform-frontend) | Unified AI Platform Frontend — Chat + Agent Flow visualization | React 19, TypeScript, React Flow, nginx |
-| [`uaip-bedrock-agent`](https://github.com/{your-org}/ai-platform-agents) | AWS Bedrock Agent Gateway — async invoke+poll MCP contract | AWS Lambda, API Gateway, DynamoDB, Bedrock |
-| [`azure-ai-landing-zone-terraform`](https://github.com/{your-org}/azure-ai-landing-zone) | Azure AI Landing Zone — foundational infrastructure | Terraform AVM, VNet, APIM, ACR, CAE, AI Services |
+| [`ai-platform-agents`](https://github.com/{your-org}/ai-platform-agents) | RAG Knowledge Assistant — searches documents, generates cited responses | Agent Framework SDK, Azure AI Search, gpt-4.1-mini |
+| [`ai-platform-agents`](https://github.com/{your-org}/ai-platform-agents) | Multi-Agent Supervisor — fan-out/fan-in orchestration across 4 agents | Agent Framework SDK WorkflowBuilder, agents.yaml |
+| [`ai-platform-governance`](https://github.com/{your-org}/ai-platform-governance) | Governance & Monitoring Hub — observability, costs, policies, incidents | FastAPI, OTEL Collector, Sentinel, Cosmos DB |
+| [`ai-platform-frontend`](https://github.com/{your-org}/ai-platform-frontend) | AI Agent Platform Frontend — Chat + Agent Flow visualization | React 19, TypeScript, React Flow, nginx |
+| [`ai-platform-agents`](https://github.com/{your-org}/ai-platform-agents) | AWS Bedrock Agent Gateway — async invoke+poll MCP contract | AWS Lambda, API Gateway, DynamoDB, Bedrock |
+| [`azure-ai-landing-zone`](https://github.com/{your-org}/azure-ai-landing-zone) | Azure AI Landing Zone — foundational infrastructure | Terraform AVM, VNet, APIM, ACR, CAE, AI Services |
 
 ---
 
 ## Use Cases
 
-### UC1 — RAG Knowledge Assistant
+### RAG Knowledge Agent
 
-**Purpose:** Answer natural language questions using the organization's internal engineering document corpus.
+**Purpose:** Answer natural language questions using the organization's internal document corpus.
 
 **How it works:**
 1. User query arrives via Chat UI or Responses API
 2. Agent Framework invokes gpt-4.1-mini
-3. LLM calls `search_engineering_docs` tool → Azure AI Search (hybrid semantic)
+3. LLM calls `search_documents` tool → Azure AI Search (hybrid semantic)
 4. AI Search returns ranked document chunks from `knowledge-base-docs` index (6 documents)
 5. LLM generates cited response with standards references
 6. Response returned via OpenAI Responses API format
@@ -127,26 +127,26 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 - `services/rag-agent/main.py` — Agent Framework entrypoint
 - `services/rag-agent/tools/search.py` — AI Search hybrid query tool
 - `agents.yaml` via Foundry descriptor pattern
-- 6 mock engineering documents (valve specs, safety reports, contracts, instrument data sheets)
+- 6 mock documents (valve specs, safety reports, contracts, instrument data sheets)
 
 ---
 
-### UC2 — Multi-Agent Supervisor
+### Multi-Agent Supervisor
 
 **Purpose:** Orchestrate multiple specialized agents across Azure and AWS to fulfill complex requests.
 
 **How it works:**
-1. User request arrives at `POST /uc2/responses`
+1. User request arrives at `POST /supervisor/responses`
 2. **Supervisor** (gpt-4.1) plans which agents to consult
 3. **Fan-out:** 4 agents execute concurrently:
-   - **Knowledge** (gpt-4.1-mini) — searches UC1 RAG via APIM
+   - **Knowledge** (gpt-4.1-mini) — searches RAG Agent via APIM
    - **Compliance** (o4-mini) — safety & regulatory analysis
    - **Bedrock** (Claude Haiku 4.5) — AWS cross-cloud retrieval via async MCP
-   - **Governance** (gpt-4.1) — platform health, costs, traces via UC3
+   - **Governance** (gpt-4.1) — platform health, costs, traces via Governance API
 4. **Fan-in:** `FanInAggregator` (custom Executor) collects all responses
 5. **Synthesizer** (gpt-4.1) merges into unified response with citations
 
-**Stack consolidation (April 2026):** UC2 was previously a dual-stack repo (FastAPI "v1" + Agent Framework "v2" coexisting). The legacy FastAPI service, mock proxies, and `Dockerfile.v2` / `requirements.v2.txt` files have been deleted. The repo now ships a **single** Agent Framework SDK supervisor on `python:3.12-slim`, port 8088, with deps `agent-framework`, `agent-framework-foundry-hosting`, `azure-identity`, etc.
+**Stack consolidation (April 2026):** Supervisor was previously a dual-stack repo (FastAPI "v1" + Agent Framework "v2" coexisting). The legacy FastAPI service, mock proxies, and `Dockerfile.v2` / `requirements.v2.txt` files have been deleted. The repo now ships a **single** Agent Framework SDK supervisor on `python:3.12-slim`, port 8088, with deps `agent-framework`, `agent-framework-foundry-hosting`, `azure-identity`, etc.
 
 **Key artifacts:**
 - `services/supervisor-api/main.py` — WorkflowBuilder with FanInAggregator
@@ -157,7 +157,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 
 ---
 
-### UC3 — Governance & Monitoring Hub
+### Governance Hub
 
 **Purpose:** Centralized governance, observability, cost tracking, SIEM, and incident management.
 
@@ -166,7 +166,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 - **OTEL Collector** — receives OTLP/HTTP from all agents, normalizes, exports to Azure Monitor
 - **Microsoft Sentinel** — 5 analytics rules for anomaly detection, security monitoring
 - **FinOps Workbook** — 6-panel Azure Monitor dashboard (token consumption, agent performance, API traffic, cross-cloud metrics, content safety)
-- **Incident Resolution** (UC4) — AI-driven triage via Azure OpenAI with rule-based fallback, human-in-the-loop approvals
+- **Incident Resolution** ( — AI-driven triage via Azure OpenAI with rule-based fallback, human-in-the-loop approvals
 
 **Key artifacts:**
 - `services/governance-api/src/governance_api/` — FastAPI app with 9 routers
@@ -177,7 +177,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 
 ---
 
-### UC4 — Incident Resolution (integrated into UC3)
+### Incident Resolution (integrated into Governance Hub)
 
 **Purpose:** AI-driven incident management with human-in-the-loop approvals.
 
@@ -210,7 +210,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 | **SIEM** | Microsoft Sentinel | 5 analytics rules, Log Analytics integration |
 | **Observability** | OpenTelemetry | OTEL Collector → Azure Monitor, W3C traceparent |
 | **Frontend** | React 19 + TypeScript + Vite | Chat UI, Agent Flow visualization (React Flow) |
-| **IaC** | Terraform (AVM) | Azure AI Landing Zone module + per-UC infrastructure |
+| **IaC** | Terraform (AVM) | Azure AI Landing Zone module + per-workload infrastructure |
 | **Cross-Cloud Auth** | Entra ID OIDC ↔ AWS IAM | Workload identity federation, no static credentials |
 | **Container Registry** | Azure Container Registry | Private, firewall-controlled access |
 
@@ -221,18 +221,18 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 | Control | Implementation |
 |---------|---------------|
 | **Identity** | User-Assigned Managed Identity for all Azure services |
-| **Caller identity** | Entra JWT validation on UC3 governance API (PyJWT/JWKS); `AUTH_MODE=required\|optional\|disabled`; caller `oid`/`upn`/roles captured on incidents and approvals (TC-1 / TC-9) |
+| **Caller identity** | Entra JWT validation on Governance governance API (PyJWT/JWKS); `AUTH_MODE=required\|optional\|disabled`; caller `oid`/`upn`/roles captured on incidents and approvals (TC-1 / TC-9) |
 | **Cross-cloud auth** | OIDC federation (Entra ID ↔ AWS IAM), no static credentials |
 | **Network isolation** | VNet-integrated CAE (**internal** ILB 192.168.1.111), private endpoints, Bastion for jumpbox |
-| **Zero-bypass gateway (TC-3)** | UC1 RAG `external_enabled=false` — only internal CAE FQDN exposed. APIM is the **only** ingress path. NSG `ai-alz-cae-nsg` on `ContainerAppEnvironmentSubnet` enforces `DenyJumpboxDirect` (priority 150, src `192.168.6.0/24`) so VNet-resident hosts cannot bypass APIM. Codified in `uaip-workload-uc1-rag-agent/infra/main.network.tf`. Verified by `uaip-workload-uc3-governance-hub/scripts/tc3.ps1` (3a/3b/3c PASS). **Note (Apr 30, 2026):** the two NSG `Deny*` rules are temporarily removed from the live `ai-alz-cae-nsg` for demo purposes; defense-in-depth design and Terraform code remain unchanged — reapply with `cd uaip-workload-uc1-rag-agent/infra && terraform apply` to restore. UC1 internal-only ingress alone keeps TC-3 3c green in the meantime. |
+| **Zero-bypass gateway (TC-3)** | RAG Agent `external_enabled=false` — only internal CAE FQDN exposed. APIM is the **only** ingress path. NSG `ai-alz-cae-nsg` on `ContainerAppEnvironmentSubnet` enforces `DenyJumpboxDirect` (priority 150, src `192.168.6.0/24`) so VNet-resident hosts cannot bypass APIM. Codified in `ai-platform-agents/infra/main.network.tf`. Verified by `ai-platform-governance/scripts/tc3.ps1` (3a/3b/3c PASS). **Note (Apr 30, 2026):** the two NSG `Deny*` rules are temporarily removed from the live `ai-alz-cae-nsg` for demo purposes; defense-in-depth design and Terraform code remain unchanged — reapply with `cd ai-platform-agents/infra && terraform apply` to restore. RAG internal-only ingress alone keeps TC-3 3c green in the meantime. |
 | **API access** | APIM subscription keys required for all endpoints |
 | **Content safety** | APIM policies detect and block prompt injection patterns |
-| **Rate limiting** | Per-subscription request quotas (UC1: 30/min, UC2: 20/min) |
+| **Rate limiting** | Per-subscription request quotas (RAG: 30/min, Supervisor: 20/min) |
 | **AI Search** | Public network access disabled — private endpoints only |
 | **ACR** | Default firewall deny — opened temporarily for builds only |
 | **Audit trail** | APIM GatewayLogs → Log Analytics → Sentinel |
 | **RBAC** | Least privilege: OpenAI User, AcrPull, Search Reader only |
-| **Entra app roles** | `uaip-governance` app (`06bf98a1-d997-4a60-a616-3c384828f408`) defines `workflow-orchestrator`, `incident-commanders`, `senior-engineers`, `on-call` (codified in `uaip-workload-uc3-governance-hub/infra/main.entra.tf`) |
+| **Entra app roles** | `ai-platform-governance` app (`06bf98a1-d997-4a60-a616-3c384828f408`) defines `workflow-orchestrator`, `incident-commanders`, `senior-engineers`, `on-call` (codified in `ai-platform-governance/infra/main.entra.tf`) |
 | **Secrets** | Zero hardcoded credentials — all auth via managed identity |
 
 ---
@@ -245,7 +245,7 @@ The Unified AI Platform is an enterprise AI orchestration platform that centrali
 Agents (Agent Framework SDK)
   │  ObservabilitySettings + Azure Monitor exporters
   ▼
-Application Insights (×3 UCs)  ──→  Log Analytics Workspace
+Application Insights (per service)  ──→  Log Analytics Workspace
   │                                       │
   │  AWS Bedrock (OTEL SDK)               ▼
   │    └──→ App Insights (direct)    Microsoft Sentinel
@@ -276,39 +276,39 @@ FinOps Workbook (Azure Monitor)
 
 ## API Surface
 
-### UC1 — RAG Agent (`/uc1/*`)
+### RAG Knowledge Agent — RAG Agent (`/rag/*`)
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `POST` | `/uc1/responses` | Query knowledge base (Responses API) |
-| `GET` | `/uc1/readiness` | Health check |
+| `POST` | `/rag/responses` | Query knowledge base (Responses API) |
+| `GET` | `/rag/readiness` | Health check |
 
-### UC2 — Supervisor (`/uc2/*`)
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/uc2/responses` | Multi-agent orchestration (Responses API) |
-| `GET` | `/uc2/readiness` | Health check |
-
-### UC3 — Governance (`/uc3/*`)
+### Multi-Agent Supervisor — Supervisor (`/supervisor/*`)
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/uc3/api/costs/summary` | Token & cost summary |
-| `GET` | `/uc3/api/costs/by-agent` | Costs broken down by agent |
-| `GET` | `/uc3/api/agents/health` | Agent health status |
-| `GET` | `/uc3/api/agents/traces` | Agent trace queries |
-| `GET/POST` | `/uc3/api/policies` | Governance policy CRUD |
-| `GET` | `/uc3/api/policies/registry` | List enterprise policies |
-| `GET` | `/uc3/api/policies/registry/{id}/active` | Active policy version |
-| `GET` | `/uc3/api/policies/registry/{id}/versions` | Version history |
-| `POST` | `/uc3/api/policies/registry/{id}/versions` | Publish new version (TC-2 — Entra caller identity required) |
-| `GET` | `/uc3/api/policies/gateway/digest` | SHA-256 digest of shipped APIM policy sources (TC-2f) |
-| `GET` | `/uc3/api/compliance/report` | Compliance report |
-| `POST` | `/uc3/api/incidents` | Create incident (AI triage; embeds versioned `policy_applied` snapshot) |
-| `POST` | `/uc3/api/incidents/{id}/approvals` | Per-incident approval (TC-2 Option A — binds approval to versioned snapshot) |
-| `POST` | `/uc3/api/incidents/{id}/resolve` | Resolve incident |
-| `POST` | `/uc3/api/approvals/{id}/respond` | Human-in-the-loop approval (enforces `approver_role` from snapshot) |
+| `POST` | `/supervisor/responses` | Multi-agent orchestration (Responses API) |
+| `GET` | `/supervisor/readiness` | Health check |
+
+### Governance Hub — Governance (`/governance/*`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/governance/api/costs/summary` | Token & cost summary |
+| `GET` | `/governance/api/costs/by-agent` | Costs broken down by agent |
+| `GET` | `/governance/api/agents/health` | Agent health status |
+| `GET` | `/governance/api/agents/traces` | Agent trace queries |
+| `GET/POST` | `/governance/api/policies` | Governance policy CRUD |
+| `GET` | `/governance/api/policies/registry` | List enterprise policies |
+| `GET` | `/governance/api/policies/registry/{id}/active` | Active policy version |
+| `GET` | `/governance/api/policies/registry/{id}/versions` | Version history |
+| `POST` | `/governance/api/policies/registry/{id}/versions` | Publish new version (TC-2 — Entra caller identity required) |
+| `GET` | `/governance/api/policies/gateway/digest` | SHA-256 digest of shipped APIM policy sources (TC-2f) |
+| `GET` | `/governance/api/compliance/report` | Compliance report |
+| `POST` | `/governance/api/incidents` | Create incident (AI triage; embeds versioned `policy_applied` snapshot) |
+| `POST` | `/governance/api/incidents/{id}/approvals` | Per-incident approval (TC-2 Option A — binds approval to versioned snapshot) |
+| `POST` | `/governance/api/incidents/{id}/resolve` | Resolve incident |
+| `POST` | `/governance/api/approvals/{id}/respond` | Human-in-the-loop approval (enforces `approver_role` from snapshot) |
 
 ### OTEL Collector (`/otel/*`)
 
@@ -342,34 +342,34 @@ FinOps Workbook (Azure Monitor)
 1. Azure AI Landing Zone (foundation)
    └── VNet, APIM, ACR, CAE, AI Services, AI Search, Log Analytics
 
-2. UC1 RAG Agent
+2. RAG Agent
    ├── Populate AI Search index: python3 scripts/populate_index.py
-   ├── Build: az acr build --image uc1-rag-agent:latest ...
+   ├── Build: az acr build --image rag-agent:latest ...
    └── Terraform: cd infra && terraform apply -var-file=terraform.tfvars.msdn
 
-3. UC3 Governance Hub
-   ├── Build: az acr build --image uc3-governance-api:latest ...
+3. Governance Hub Hub
+   ├── Build: az acr build --image governance-api:latest ...
    └── Terraform: cd infra && terraform apply (creates Cosmos, Service Bus, Sentinel, workbook)
 
 4. AWS Bedrock Gateway
    ├── Configure: cp infra/terraform.tfvars.example infra/terraform.tfvars
    └── Deploy: make tf-apply
 
-5. UC2 Supervisor Agent
-   ├── Build: az acr build --image uc2-supervisor-api:v2 ...
+5. Supervisor Agent Agent
+   ├── Build: az acr build --image supervisor-api:v2 ...
    └── Terraform: cd infra && terraform apply (creates container app + OIDC federation)
 
 6. Frontend
-   ├── Build: az acr build --image uaip-frontend:latest ...
+   ├── Build: az acr build --image ai-platform-frontend:latest ...
    └── Deploy: az containerapp update --set-env-vars IMAGE_PULL_TIMESTAMP=$(date +%s)
 ```
 
 ### Quick Reference — Build & Deploy
 
-UC2 and UC3 use a `Makefile` `acr-build` target that derives image tags from the repo-root `VERSION` file (currently `0.2.0`) and bakes a secondary `sha-<git7>` tag for audit:
+Supervisor and Governance use a `Makefile` `acr-build` target that derives image tags from the repo-root `VERSION` file (currently `0.2.0`) and bakes a secondary `sha-<git7>` tag for audit:
 
 ```bash
-# UC2 / UC3 (recommended)
+# Supervisor / Governance (recommended)
 make acr-build           # builds genaicri40e.azurecr.io/<image>:v0.2.0 + :sha-<git7>
 make acr-build-deploy    # build + containerapp update in one step
 ```
@@ -379,22 +379,22 @@ Manual fallback (any repo) — opens ACR firewall, builds, locks back down:
 ```bash
 az acr update -n genaicri40e --default-action Allow
 
-az acr build --registry genaicri40e --image uc1-rag-agent:cr30 \
+az acr build --registry genaicri40e --image rag-agent:cr30 \
   --file services/rag-agent/Dockerfile services/rag-agent --platform linux/amd64
 
-az acr build --registry genaicri40e --image uc2-supervisor-api:v0.2.0 \
+az acr build --registry genaicri40e --image supervisor-api:v0.2.0 \
   --file services/supervisor-api/Dockerfile services/supervisor-api --platform linux/amd64
 
-az acr build --registry genaicri40e --image uc3-governance-api:v0.2.0 \
+az acr build --registry genaicri40e --image governance-api:v0.2.0 \
   --file services/governance-api/Dockerfile services/governance-api --platform linux/amd64
 
-az acr build --registry genaicri40e --image uaip-frontend:cr27 \
+az acr build --registry genaicri40e --image ai-platform-frontend:cr27 \
   --file Dockerfile . --platform linux/amd64
 
 az acr update -n genaicri40e --default-action Deny
 ```
 
-> **Image tag convention (Apr 2026)**: Test-named tags (`tc2-live`, `tc3-live`) have been retired. UC2 + UC3 default to `v$(VERSION)` from the repo-root `VERSION` file plus `sha-<git7>` baked at build time. Test scripts (`tc2.ps1`, `tc3.ps1`, `loadtest_uc1.ps1`) are acceptance probes only and do not drive image names.
+> **Image tag convention (Apr 2026)**: Test-named tags (`tc2-live`, `tc3-live`) have been retired. Supervisor + Governance default to `v$(VERSION)` from the repo-root `VERSION` file plus `sha-<git7>` baked at build time. Test scripts (`tc2.ps1`, `tc3.ps1`, `loadtest_uc1.ps1`) are acceptance probes only and do not drive image names.
 
 ---
 
@@ -404,7 +404,7 @@ az acr update -n genaicri40e --default-action Deny
 
 | Resource | Name | Purpose |
 |----------|------|---------|
-| Resource Group | `ai-lz-rg-msdn-mb44x` (region `australiaeast`) | All UAIP resources |
+| Resource Group | `ai-lz-rg-msdn-mb44x` (region `australiaeast`) | All AI Agent Platform resources |
 | VNet | `ai-lz-vnet-msdn` (`192.168.0.0/20`) | Private networking |
 | Subnet — CAE | `ContainerAppEnvironmentSubnet` `192.168.1.0/24` (delegation `Microsoft.App/environments`, NSG `ai-alz-cae-nsg`) | Container Apps Environment |
 | Subnet — APIM | `APIMSubnet` `192.168.4.0/24` | APIM Internal VNet |
@@ -416,7 +416,7 @@ az acr update -n genaicri40e --default-action Deny
 | AI Services | `ai-foundry-i40e` | Azure OpenAI (gpt-4.1 cap 15, gpt-4.1-mini cap 11, o4-mini cap 7) |
 | AI Search | `ai-alz-ks-ai-search-i40e` (publicAccess `Enabled`, AAD+API key) | Document search |
 | Log Analytics | Shared workspace | Centralized logging for all UCs |
-| Grafana | `uaip-grafana` (Standard) | 15-panel UAIP dashboard (`uaip-agent-finops-v3`) + 40+ pre-built |
+| Grafana | `ai-platform-grafana` (Standard) | 15-panel AI Agent Platform dashboard (`ai-platform-agent-finops-v3`) + 40+ pre-built |
 | Bastion | `ai-alz-bastion` (Standard) | Secure jumpbox access |
 | Jump VM | `ai-alz-jumpvm` (NIC `ai-alz-jumpvm-nic1`, IP `192.168.6.4`, PowerShell 5.1) | Management VM, no public IP |
 
@@ -424,11 +424,11 @@ az acr update -n genaicri40e --default-action Deny
 
 | App | Image | Port | Ingress | Health |
 |-----|-------|------|---------|--------|
-| `ca-uc1-rag-agent` | `uc1-rag-agent:cr30` | 8088 | **Internal only** (`external_enabled=false`) — FQDN `ca-uc1-rag-agent.internal.ambitiouscliff-ec38b96b.australiaeast.azurecontainerapps.io` | `/readiness` |
-| `ca-uc2-supervisor` | `uc2-supervisor-api:v0.2.0` (+ `sha-<git7>`) | 8088 | Internal | `/readiness` |
-| `ca-uc3-governance` | `uc3-governance-api:v0.2.0` (+ `sha-<git7>`) | 8000 | Internal | `/readiness` |
-| `ca-uc3-otel-collector` | OTEL Collector contrib | 4318 | Internal | — |
-| `ca-uaip-frontend` | `uaip-frontend:cr27` | 8080 | Internal | `/` |
+| `ca-rag-agent` | `rag-agent:cr30` | 8088 | **Internal only** (`external_enabled=false`) — FQDN `ca-rag-agent.internal.ambitiouscliff-ec38b96b.australiaeast.azurecontainerapps.io` | `/readiness` |
+| `ca-supervisor` | `supervisor-api:v0.2.0` (+ `sha-<git7>`) | 8088 | Internal | `/readiness` |
+| `ca-governance` | `governance-api:v0.2.0` (+ `sha-<git7>`) | 8000 | Internal | `/readiness` |
+| `ca-otel-collector` | OTEL Collector contrib | 4318 | Internal | — |
+| `ca-ai-platform-frontend` | `ai-platform-frontend:cr27` | 8080 | Internal | `/` |
 
 All five apps run on the **internal** CAE; external reach is exclusively via APIM (and, for the frontend, via APIM-fronted nginx proxy).
 
@@ -445,13 +445,13 @@ All five apps run on the **internal** CAE; external reach is exclusively via API
 
 ## Test & Verification Scripts
 
-Acceptance probes live in `uaip-workload-uc3-governance-hub/scripts/` and are PowerShell 5.1 / ASCII-only so they run on the jumpbox VM (`ai-alz-jumpvm`):
+Acceptance probes live in `ai-platform-governance/scripts/` and are PowerShell 5.1 / ASCII-only so they run on the jumpbox VM (`ai-alz-jumpvm`):
 
 | Script | Purpose |
 |--------|---------|
 | `tc2.ps1` | TC-2 enforcement \u2014 versioned policy registry round-trip, snapshot binding on incidents, approver-role enforcement (mismatch \u2192 403), distinct-approver tally, single-veto, idempotent `policy_decision`, gateway digest endpoint. |
 | `tc3.ps1` | TC-3 zero-bypass \u2014 3a (APIM unauth \u2192 401), 3b (APIM authed \u2192 200), 3c (jumpbox direct to internal CAE FQDN must be **denied** \u2014 by NSG `DenyJumpboxDirect` rule when codified, or by unresolvable internal-only ingress when the NSG drift is in effect). |
-| `loadtest_uc1.ps1` | Concurrency probe over UC1 RAG via APIM; background-job fan-out, p50/p95/p99 latency, success rate. Image tag is independent of the script name. |
+| `loadtest_uc1.ps1` | Concurrency probe over RAG Agent via APIM; background-job fan-out, p50/p95/p99 latency, success rate. Image tag is independent of the script name. |
 
 Test scripts are **acceptance probes only** \u2014 they neither mutate live data beyond their incident sandboxes nor drive image tag names.\n\n---\n\n## Key Design Decisions
 
@@ -472,8 +472,8 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 
 | Document | Location | Purpose |
 |----------|----------|---------|
-| PoC Proposal | [`docs/uaip_poc_proposal_30_march_2026.md`](docs/uaip_poc_proposal_30_march_2026.md) | Requirements and success criteria for 4 use cases |
-| Platform Strategy | [`docs/uaip_solution_architecture.md`](docs/uaip_solution_architecture.md) | Multi-cloud AI platform design principles |
+| PoC Proposal | [`docs/solution_architecture.md`](docs/solution_architecture.md) | Requirements and success criteria for 4 use cases |
+| Platform Strategy | [`docs/solution_architecture.md`](docs/solution_architecture.md) | Multi-cloud AI platform design principles |
 | AWS Handoff Spec | [`docs/aws_handoff_bedrock_agents_gateway.md`](docs/aws_handoff_bedrock_agents_gateway.md) | AWS technical handoff for Bedrock gateway |
 | Gap Analysis | [`docs/gap_analysis_report.md`](docs/gap_analysis_report.md) | Requirements vs. implementation assessment |
 
@@ -486,19 +486,19 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 | Component | Status |
 |-----------|--------|
 | Azure AI Landing Zone | ✅ Deployed |
-| UC1 RAG Knowledge Agent | ✅ Deployed (`uc1-rag-agent:cr30`, internal-only ingress) |
-| UC2 Multi-Agent Supervisor | ✅ Deployed (`uc2-supervisor-api:v0.2.0` + `sha-<git7>`, single-stack on Agent Framework SDK) |
-| UC3 Governance Hub | ✅ Deployed (`uc3-governance-api:v0.2.0` + `sha-<git7>`, TC-2 versioned policies + TC-1/9 caller identity) |
-| UC4 Incident Resolution | ✅ Integrated into UC3 with AI triage + voting engine + per-incident approval binding |
+| RAG Agent Knowledge Agent | ✅ Deployed (`rag-agent:cr30`, internal-only ingress) |
+| Supervisor Multi-Agent Supervisor | ✅ Deployed (`supervisor-api:v0.2.0` + `sha-<git7>`, single-stack on Agent Framework SDK) |
+| Governance Hub Hub | ✅ Deployed (`governance-api:v0.2.0` + `sha-<git7>`, TC-2 versioned policies + TC-1/9 caller identity) |
+| Incident Incident Resolution | ✅ Integrated into Governance with AI triage + voting engine + per-incident approval binding |
 | AWS Bedrock Gateway | ✅ Deployed (4 Lambda functions, OTEL→Azure Monitor) |
 | Frontend | ✅ Deployed (cr27, Chat + Agent Flow) |
-| Grafana Dashboards | ✅ Deployed (Standard tier, 15-panel custom dashboard `uaip-agent-finops-v3`) |
+| Grafana Dashboards | ✅ Deployed (Standard tier, 15-panel custom dashboard `ai-platform-agent-finops-v3`) |
 | APIM Content Safety | ✅ 11 prompt injection/jailbreak patterns blocked |
 | Sentinel SIEM | ✅ 6 analytics rules (incl. Agent SLA Breach), diagnostic settings wired |
-| Zero-bypass gateway (TC-3) | ✅ UC1 internal-only, NSG `ai-alz-cae-nsg` codified in `uaip-workload-uc1-rag-agent/infra/main.network.tf` |
+| Zero-bypass gateway (TC-3) | ✅ RAG internal-only, NSG `ai-alz-cae-nsg` codified in `ai-platform-agents/infra/main.network.tf` |
 | Versioned policy enforcement (TC-2) | ✅ Append-only registry + per-incident snapshot + approver-role enforcement |
 | Per-agent SLA (TC-5) | ✅ `agents.yaml` `sla_timeout_seconds`, OTEL `agent.sla_breach` events, Sentinel rule |
-| Caller identity (TC-1 / TC-9) | ✅ Entra JWT validation; 4 app roles on `uaip-governance` |
+| Caller identity (TC-1 / TC-9) | ✅ Entra JWT validation; 4 app roles on `ai-platform-governance` |
 | FinOps Dashboard | ✅ Azure Monitor Workbook (6 panels) + Grafana |
 | LLM-as-Judge Evaluation | ✅ Pipeline implemented (3-dimension scoring) |
 | Cross-Cloud OTEL | ✅ AWS Lambda spans → Azure App Insights via force_flush() |
@@ -508,39 +508,39 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 
 ## Use Case Requirements Traceability
 
-### UC1 — RAG Knowledge Assistant
+### RAG Knowledge Agent
 
-> **Repo:** [`uaip-workload-uc1-rag-agent`](https://github.com/{your-org}/ai-platform-agents)
-> **Container:** `ca-uc1-rag-agent` (cr30) | **Model:** gpt-4.1-mini | **Port:** 8088
+> **Repo:** [`ai-platform-agents`](https://github.com/{your-org}/ai-platform-agents)
+> **Container:** `ca-rag-agent` (cr30) | **Model:** gpt-4.1-mini | **Port:** 8088
 
 | # | Requirement | Priority | Status | Implementation |
 |---|-------------|----------|--------|----------------|
-| 1.1 | OpenTelemetry instrumentation — spans for query, retrieval, LLM inference | P1 | ✅ Done | `configure_azure_monitor()` + `create_resource()` from Agent Framework SDK. Spans auto-emitted for chat completions and tool calls. App Insights `ai-uc1-rag-agent`. |
-| 1.2 | Azure API Management AI Gateway — rate limiting, failover, token tracking | P1 | ✅ Done | APIM `/uc1/*` routes with 30 req/min rate limit, W3C traceparent injection, GatewayLogs diagnostic export to Log Analytics. |
-| 1.3 | Azure Content Safety guardrails — prompt injection detection, content filtering | P2 | ✅ Done | APIM policy blocks 11 prompt injection/jailbreak patterns (shared with UC2). APIM-level enforcement. |
+| 1.1 | OpenTelemetry instrumentation — spans for query, retrieval, LLM inference | P1 | ✅ Done | `configure_azure_monitor()` + `create_resource()` from Agent Framework SDK. Spans auto-emitted for chat completions and tool calls. App Insights `ai-rag-agent`. |
+| 1.2 | Azure API Management AI Gateway — rate limiting, failover, token tracking | P1 | ✅ Done | APIM `/rag/*` routes with 30 req/min rate limit, W3C traceparent injection, GatewayLogs diagnostic export to Log Analytics. |
+| 1.3 | Azure Content Safety guardrails — prompt injection detection, content filtering | P2 | ✅ Done | APIM policy blocks 11 prompt injection/jailbreak patterns (shared across agents). APIM-level enforcement. |
 | 1.4 | LLM-as-Judge evaluation pipeline — correctness/relevance/groundedness scoring | P3 | ✅ Done | `evaluation/judge.py` — scores on Groundedness, Relevance, Completeness (1-5) using gpt-4.1 as judge. 5 default test questions covering valve specs, safety, piping, instruments, governance policy. CLI: `python -m evaluation.judge --endpoint <url>` |
 | 1.5 | Governance / access control — Entra ID auth + per-department search filters | P4 | ⬜ Deferred | APIM subscription keys provide API-level access control. Per-department AI Search security filters not implemented — would require Entra ID user context propagation + search index security trimming. |
 | 1.6 | Cost management dashboards — token usage, estimated spend, budget alerts | P3 | ✅ Done | Grafana dashboard: Token Usage by Model, Token Usage Over Time, LLM Latency panels. Azure Monitor FinOps Workbook. Budget alerts not configured (stretch goal). |
-| 1.7 | Hybrid semantic search over engineering documents | P1 | ⚠️ Partial | Using `queryType: simple` (keyword search). Standard-tier AI Search doesn't support semantic ranking — would need S2+ tier upgrade or vector embeddings. Keyword search works well for structured document retrieval in the PoC. |
+| 1.7 | Hybrid semantic search over documents | P1 | ⚠️ Partial | Using `queryType: simple` (keyword search). Standard-tier AI Search doesn't support semantic ranking — would need S2+ tier upgrade or vector embeddings. Keyword search works well for structured document retrieval in the PoC. |
 | 1.8 | Cited responses with document references | P1 | ✅ Done | Agent instructions require citations. Responses include document names (SP-MECH-VAL-001, WS-PIP-MAT-002, etc.) and standards references (ASME B16.34, API 6D). |
 | 1.9 | Follow-up QA on specific documents | P2 | ✅ Done | `answer_from_document` tool — filters AI Search by document title for focused Q&A. |
-| 1.10 | Managed identity (no API keys) | P1 | ✅ Done | User-Assigned Managed Identity `id-uc1-rag-agent` with RBAC: AcrPull, Cognitive Services OpenAI User, Search Index Data Reader, Search Index Data Contributor. |
+| 1.10 | Managed identity (no API keys) | P1 | ✅ Done | User-Assigned Managed Identity `id-rag-agent` with RBAC: AcrPull, Cognitive Services OpenAI User, Search Index Data Reader, Search Index Data Contributor. |
 | 1.11 | Infrastructure as Code | P1 | ✅ Done | Full Terraform `infra/` — container app, RBAC, APIM APIs, App Insights. `terraform.tfvars.msdn` for MSDN PoC environment. |
 
 ---
 
-### UC2 — Multi-Agent Supervisor & Monitoring
+### Multi-Agent Supervisor & Monitoring
 
-> **Repo:** [`uaip-workload-uc2-supervisor-agent`](https://github.com/{your-org}/ai-platform-agents)
-> **Container:** `ca-uc2-supervisor` (cr35) | **Model:** gpt-4.1 (planning) | **Port:** 8088
+> **Repo:** [`ai-platform-agents`](https://github.com/{your-org}/ai-platform-agents)
+> **Container:** `ca-supervisor` (cr35) | **Model:** gpt-4.1 (planning) | **Port:** 8088
 
 | # | Requirement | Priority | Status | Implementation |
 |---|-------------|----------|--------|----------------|
 | 2.1 | Central supervisor orchestrating multiple agents | P1 | ✅ Done | `WorkflowBuilder` with `add_multi_selection_edge_group` for dynamic routing. Supervisor plans which agents to invoke, selection function parses plan and routes concurrently. |
-| 2.2 | Azure native agent | P1 | ✅ Done | Knowledge Agent (gpt-4.1-mini via UC1 RAG) + Compliance Agent (o4-mini direct OpenAI call) + Governance Agent (gpt-4.1 via UC3 API). |
+| 2.2 | Azure native agent | P1 | ✅ Done | Knowledge Agent (gpt-4.1-mini via RAG Agent) + Compliance Agent (o4-mini direct OpenAI call) + Governance Agent (gpt-4.1 via Governance API). |
 | 2.3 | AWS Bedrock agent (via proxy) | P1 | ✅ Done | External Agent (Cross-Cloud) — async invoke+poll via API Gateway → Lambda → Claude Haiku 4.5. MCP-shaped JSON contract. OIDC federation (Entra ↔ AWS IAM). |
 | 2.4 | ServiceNow agent (via proxy) | P3 | ⬜ Deferred | `services/mock-proxies/servicenow_proxy.py` exists but not wired into workflow. No ServiceNow instance available for PoC. Governance Agent demonstrates the third external agent pattern. |
-| 2.5 | End-to-end OTEL tracing — Supervisor → agent → tool/API | P1 | ✅ Done | `configure_azure_monitor()` + httpx instrumentation. Custom spans: `uaip.supervisor.route`, `uaip.aggregator.fan_in`, `uaip.tool.*` for each tool. |
+| 2.5 | End-to-end OTEL tracing — Supervisor → agent → tool/API | P1 | ✅ Done | `configure_azure_monitor()` + httpx instrumentation. Custom spans: `ai-platform.supervisor.route`, `ai-platform.aggregator.fan_in`, `ai-platform.tool.*` for each tool. |
 | 2.6 | Request-level and step-level spans | P1 | ✅ Done | Custom `_tracer` spans at routing, aggregation, and tool levels. Agent Framework SDK emits `chat`, `invoke_agent` spans automatically. |
 | 2.7 | Required span attributes (agent.name, agent.type, tool.name, uc, error) | P1 | ✅ Done | All tools set: `uc=use-case-2`, `agent.name`, `agent.type` (native/external/orchestrator), `tool.name`, `error`. Bedrock adds `cloud.provider=aws`, `bedrock.execution_id`, token counts. |
 | 2.8 | Telemetry export to Azure Monitor / App Insights | P1 | ✅ Done | `APPLICATIONINSIGHTS_CONNECTION_STRING` env var → `configure_azure_monitor()`. OTEL spans, dependencies, and GenAI metrics all flow to App Insights. |
@@ -550,38 +550,38 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 | 2.12 | Content safety guardrails | P2 | ✅ Done | APIM policy with 11 pattern checks: prompt injection, jailbreak, DAN, developer mode bypass. Returns 400 with `content_policy_violation`. |
 | 2.13 | Infrastructure as Code | P1 | ✅ Done | Terraform `infra/` — container app, RBAC, APIM, Entra app registrations, App Insights. |
 | 2.14 | Per-agent SLA enforcement (TC-5) | P1 | ✅ Done | `sla_timeout_seconds` per agent in `agents.yaml`; `services/supervisor-api/tools/sla.py` wraps tool invocations with `asyncio.wait_for`, records `agent.sla_breach` OTEL events on timeout, and surfaces a deterministic timeout response. 9 new tests in `tests/test_tc5_sla.py`. Sentinel rule **Agent SLA Breach** alerts on the OTEL events. |
-| 2.15 | Stack consolidation (April 2026) | — | ✅ Done | Legacy FastAPI v1 stack + mock-proxies removed. Single Agent Framework SDK supervisor on `python:3.12-slim`, port 8088. Image now `uc2-supervisor-api:v0.2.0` (+ `sha-<git7>`). |
+| 2.15 | Stack consolidation (April 2026) | — | ✅ Done | Legacy FastAPI v1 stack + mock-proxies removed. Single Agent Framework SDK supervisor on `python:3.12-slim`, port 8088. Image now `supervisor-api:v0.2.0` (+ `sha-<git7>`). |
 
 ---
 
-### UC3 — Governance & Monitoring Hub
+### Governance Hub
 
-> **Repo:** [`uaip-workload-uc3-governance-hub`](https://github.com/{your-org}/ai-platform-governance)
-> **Container:** `ca-uc3-governance` (latest) | **Framework:** FastAPI | **Port:** 8000
+> **Repo:** [`ai-platform-governance`](https://github.com/{your-org}/ai-platform-governance)
+> **Container:** `ca-governance` (latest) | **Framework:** FastAPI | **Port:** 8000
 
 | # | Requirement | Priority | Status | Implementation |
 |---|-------------|----------|--------|----------------|
-| 3.1 | Unified telemetry — OTEL Collector ingests from all agents | P1 | ✅ Done | `ca-uc3-otel-collector` — OTLP/HTTP receivers, batch processor, Azure Monitor exporter. Routes: `/otel/v1/traces`, `/otel/v1/metrics`, `/otel/v1/logs`. |
+| 3.1 | Unified telemetry — OTEL Collector ingests from all agents | P1 | ✅ Done | `ca-otel-collector` — OTLP/HTTP receivers, batch processor, Azure Monitor exporter. Routes: `/otel/v1/traces`, `/otel/v1/metrics`, `/otel/v1/logs`. |
 | 3.2 | Cross-cloud observability — Azure + AWS spans | P1 | ✅ Done | Azure agents emit via `configure_azure_monitor()`. AWS Lambda emits via `AzureMonitorTraceExporter` with `force_flush()`. Both share W3C traceparent for correlation. |
 | 3.3 | Cost & token tracking API | P1 | ✅ Done | `/api/costs/summary`, `/api/costs/by-agent`, `/api/costs/trends` — queries Log Analytics for token consumption data. |
 | 3.4 | Policy enforcement API | P2 | ✅ Done | `/api/policies` — CRUD for governance policies (in-memory store, extensible to Cosmos DB). |
 | 3.5 | Compliance reporting | P2 | ✅ Done | `/api/compliance/report` — generates compliance reports from telemetry and policy data. |
 | 3.6 | SIEM — Microsoft Sentinel integration | P1 | ✅ Done | Sentinel workspace with 5 analytics rules: Anomalous Token Consumption, High Agent Failure Rate, Content Safety Violations, Rate Limit Breaches, Cross-Cloud Latency Degradation. |
 | 3.7 | OTEL Collector via APIM | P2 | ✅ Done | APIM `/otel/*` routes forward to OTEL Collector container app. Cross-cloud agents can push telemetry via HTTPS. |
-| 3.8 | Grafana dashboards | P2 | ✅ Done | Azure Managed Grafana (Standard) with custom 15-panel UAIP dashboard `uaip-agent-finops-v3`: Prompts, Tool Invocations, Cross-Cloud Calls, Avg Agents/Prompt, Foundry Success, Bedrock Success, Agents Selected by Supervisor, Tool Performance & SLA Compliance (TC-5), LLM Calls/min — Foundry vs Bedrock, Foundry Latency by Deployment, Bedrock Cross-Cloud Hops, Validator Verdicts by Agent (TC-4/TC-6), Agent Selection Over Time, Recent Failures (drill-in to App Insights). Plus 40+ pre-built Azure dashboards. |
+| 3.8 | Grafana dashboards | P2 | ✅ Done | Azure Managed Grafana (Standard) with custom 15-panel AI Agent Platform dashboard `ai-platform-agent-finops-v3`: Prompts, Tool Invocations, Cross-Cloud Calls, Avg Agents/Prompt, Foundry Success, Bedrock Success, Agents Selected by Supervisor, Tool Performance & SLA Compliance (TC-5), LLM Calls/min — Foundry vs Bedrock, Foundry Latency by Deployment, Bedrock Cross-Cloud Hops, Validator Verdicts by Agent (TC-4/TC-6), Agent Selection Over Time, Recent Failures (drill-in to App Insights). Plus 40+ pre-built Azure dashboards. |
 | 3.9 | FinOps Workbook | P2 | ✅ Done | Azure Monitor Workbook with 6 KQL panels: agent performance, token consumption, daily trends, API traffic, cross-cloud metrics, content safety. Deployed via Terraform. |
 | 3.10 | Infrastructure as Code | P1 | ✅ Done | Terraform `infra/` — container apps, OTEL collector, APIM, Cosmos DB, Service Bus, Event Grid, Sentinel, App Insights, FinOps Workbook. |
 | 3.11 | Versioned policy registry + enforcement (TC-2) | P1 | ✅ Done | Append-only `EnterprisePolicy` registry with SHA-256 canonical hashing. `Incident.create` embeds a `policy_applied` snapshot (policy_id, version, hash, threshold rule, approver_role). `approval_service.respond()` reads the snapshot and enforces approver role via Entra app role membership — mismatched roles raise `ApprovalRoleError` → HTTP 403. Distinct-approver tally + single-veto short-circuit. Idempotent `policy_decision` writes. `WorkflowEvent` emissions: `policy.threshold_met`, `policy.rejected`. 6 new tests in `tests/test_tc2_enforcement.py` (50/50 passing). |
 | 3.12 | APIM gateway digest (TC-2f) | P1 | ✅ Done | `GET /api/policies/gateway/digest` returns SHA-256 over `infra/main.apim*.tf` + APIM policy XML files. Current digest `a6c45e9f…`. Lets governance plane prove which policy bundle is live in APIM at any moment. |
-| 3.13 | Caller identity (TC-1 / TC-9) | P1 | ✅ Done | `CallerIdentity` model + Entra JWT validation (PyJWT + JWKS cache). `AUTH_MODE` env: `required` / `optional` / `disabled`. `Incident.reported_by` and `ApprovalRequest.approver_oid` / `_tenant_id` / `_auth_mode` populated from validated tokens. 4 Entra app roles defined on `uaip-governance` app (`workflow-orchestrator`, `incident-commanders`, `senior-engineers`, `on-call`) and codified in `infra/main.entra.tf` (azuread `~> 3.0`). |
-| 3.14 | Sentinel rule — Agent SLA Breach | P1 | ✅ Done | Scheduled rule added to `infra/main.sentinel.tf` watching for OTEL `agent.sla_breach` events emitted by UC2 (TC-5).
+| 3.13 | Caller identity (TC-1 / TC-9) | P1 | ✅ Done | `CallerIdentity` model + Entra JWT validation (PyJWT + JWKS cache). `AUTH_MODE` env: `required` / `optional` / `disabled`. `Incident.reported_by` and `ApprovalRequest.approver_oid` / `_tenant_id` / `_auth_mode` populated from validated tokens. 4 Entra app roles defined on `ai-platform-governance` app (`workflow-orchestrator`, `incident-commanders`, `senior-engineers`, `on-call`) and codified in `infra/main.entra.tf` (azuread `~> 3.0`). |
+| 3.14 | Sentinel rule — Agent SLA Breach | P1 | ✅ Done | Scheduled rule added to `infra/main.sentinel.tf` watching for OTEL `agent.sla_breach` events emitted by Supervisor (TC-5).
 
 ---
 
-### UC4 — Incident Resolution (integrated into UC3)
+### Incident Resolution (integrated into Governance Hub)
 
-> **Repo:** [`uaip-workload-uc3-governance-hub`](https://github.com/{your-org}/ai-platform-governance) (merged)
-> **Reference:** [`uaip-workload-uc4-incident-resolution`](https://github.com/{your-org}/ai-platform-governance)
+> **Repo:** [`ai-platform-governance`](https://github.com/{your-org}/ai-platform-governance) (merged)
+> **Reference:** [`ai-platform-governance`](https://github.com/{your-org}/ai-platform-governance)
 
 | # | Requirement | Priority | Status | Implementation |
 |---|-------------|----------|--------|----------------|
@@ -590,16 +590,16 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 | 4.3 | Event-driven workflow engine | P1 | ✅ Done | Service Bus + Event Grid infrastructure. `/api/events` router for event routing. Incident state machine: received → triaging → investigating → deciding → awaiting_approval → remediating → resolved. |
 | 4.4 | Multi-agent voting / quorum | P1 | ✅ Done | `DecisionEngine` with 3 strategies: weighted_majority, unanimous, quorum. `/api/incidents/{id}/votes` to submit agent votes, `/api/incidents/{id}/decide` to run voting. Auto-approve for P3/P4 with >95% confidence. |
 | 4.5 | Long-running workflow checkpoint / resume | P2 | ✅ Done | Cosmos DB persistence for incidents (lazy-init, in-memory fallback). `WorkflowState` tracks current status, agent results, decision confidence, approval ID. Read-through cache. |
-| 4.6 | Integration with UC1 (knowledge context) | P3 | ✅ Done | `_get_knowledge_context()` queries UC1 RAG endpoint for engineering context related to the incident. Knowledge is injected into the AI triage prompt for richer severity/category classification. Activated when `UC1_RAG_ENDPOINT` is set. |
-| 4.7 | Integration with UC2 (multi-agent orchestration) | P3 | ✅ Done | `_run_supervisor_triage()` routes incident through UC2 multi-agent supervisor. Supervisor orchestrates Knowledge, Compliance, and Governance agents for comprehensive analysis. Activated when `UC2_SUPERVISOR_ENDPOINT` is set. Cascade: UC2 → AI+UC1 → rules. |
+| 4.6 | Integration with RAG (knowledge context) | P3 | ✅ Done | `_get_knowledge_context()` queries RAG Agent endpoint for knowledge context related to the incident. Knowledge is injected into the AI triage prompt for richer severity/category classification. Activated when `RAG_RAG_ENDPOINT` is set. |
+| 4.7 | Integration with Supervisor (multi-agent orchestration) | P3 | ✅ Done | `_run_supervisor_triage()` routes incident through Supervisor multi-agent supervisor. Supervisor orchestrates Knowledge, Compliance, and Governance agents for comprehensive analysis. Activated when `SUPERVISOR_ENDPOINT` is set. Cascade: Supervisor → AI+RAG → rules. |
 | 4.8 | Decision transparency — voting, confidence, escalation audit | P1 | ✅ Done | `Decision` model captures outcome, confidence, strategy, all votes with reasoning, requires_approval flag. Full vote history at `/api/incidents/{id}/votes`. |
 
 ---
 
 ### Frontend
 
-> **Repo:** [`uaip-frontend`](https://github.com/{your-org}/ai-platform-frontend) (private)
-> **Container:** `ca-uaip-frontend` (cr27) | **Stack:** React 19, TypeScript, Vite, nginx | **Port:** 8080
+> **Repo:** [`ai-platform-frontend`](https://github.com/{your-org}/ai-platform-frontend) (private)
+> **Container:** `ca-ai-platform-frontend` (cr27) | **Stack:** React 19, TypeScript, Vite, nginx | **Port:** 8080
 
 | # | Requirement | Priority | Status | Implementation |
 |---|-------------|----------|--------|----------------|
@@ -614,7 +614,7 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 
 ### Cross-Cloud (AWS Bedrock)
 
-> **Repo:** [`uaip-bedrock-agent`](https://github.com/{your-org}/ai-platform-agents)
+> **Repo:** [`ai-platform-agents`](https://github.com/{your-org}/ai-platform-agents)
 > **Stack:** AWS Lambda, API Gateway v2, DynamoDB, Bedrock Claude Haiku 4.5
 
 | # | Requirement | Priority | Status | Implementation |
@@ -630,7 +630,7 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 
 ### Platform / Landing Zone
 
-> **Repo:** [`azure-ai-landing-zone-terraform`](https://github.com/{your-org}/azure-ai-landing-zone)
+> **Repo:** [`azure-ai-landing-zone`](https://github.com/{your-org}/azure-ai-landing-zone)
 
 | # | Requirement | Priority | Status | Implementation |
 |---|-------------|----------|--------|----------------|
@@ -651,10 +651,10 @@ Test scripts are **acceptance probes only** \u2014 they neither mutate live data
 
 | Use Case | Total Requirements | ✅ Done | ⚠️ Partial | ⬜ Deferred |
 |----------|--------------------|---------|-----------|-------------|
-| **UC1** — RAG Knowledge Assistant | 11 | 9 | 1 | 1 |
-| **UC2** — Multi-Agent Supervisor | 15 | 14 | 0 | 1 |
-| **UC3** — Governance Hub | 14 | 14 | 0 | 0 |
-| **UC4** — Incident Resolution | 8 | 8 | 0 | 0 |
+| **RAG** — RAG Knowledge Assistant | 11 | 9 | 1 | 1 |
+| **Multi-Agent Supervisor** | 15 | 14 | 0 | 1 |
+| **Governance Hub** | 14 | 14 | 0 | 0 |
+| **Incident Resolution** | 8 | 8 | 0 | 0 |
 | **Frontend** | 6 | 6 | 0 | 0 |
 | **Cross-Cloud (AWS)** | 6 | 6 | 0 | 0 |
 | **Platform / Landing Zone** | 10 | 10 | 0 | 0 |
