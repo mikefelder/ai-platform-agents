@@ -1,0 +1,114 @@
+openapi: 3.0.3
+info:
+  title: AWS Agent Gateway
+  version: 1.0.0
+  description: |
+    AWS-side implementation of the AWS Agent Gateway contract
+    defined in docs/aws_handoff_bedrock_agents_gateway.md.
+
+    The gateway exposes Bedrock-hosted agents to the Azure supervisor
+    via the async invoke + poll MCP contract.
+tags:
+  - name: Agents
+paths:
+  /agents/{agentName}/invoke:
+    post:
+      summary: Invoke Bedrock Agent (Async)
+      tags: [Agents]
+      parameters:
+        - name: agentName
+          in: path
+          required: true
+          schema: { type: string }
+        - name: traceparent
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MCPInvocation'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvokeAck'
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+  /executions/{executionId}:
+    get:
+      summary: Get Agent Execution Status
+      tags: [Agents]
+      parameters:
+        - name: executionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Execution Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionResult'
+        '404': { description: Execution not found }
+  /health:
+    get:
+      summary: Service health check
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    MCPInvocation:
+      type: object
+      required: [mcpVersion, traceparent, invocation, input]
+      properties:
+        mcpVersion: { type: string, example: '1.0' }
+        traceparent: { type: string }
+        invocation:
+          type: object
+          properties:
+            invocationId: { type: string }
+            parentAgent:  { type: string }
+            targetAgent:  { type: string }
+            async:        { type: boolean }
+        input:
+          type: object
+          properties:
+            taskType: { type: string }
+            payload:  { type: object, additionalProperties: true }
+    InvokeAck:
+      type: object
+      properties:
+        executionId: { type: string }
+        status:      { type: string, enum: [accepted] }
+    ExecutionResult:
+      type: object
+      properties:
+        executionId: { type: string }
+        status:
+          type: string
+          enum: [accepted, running, completed, failed]
+        result:
+          type: object
+          nullable: true
+          properties:
+            content:   { type: string }
+            citations: { type: array, items: { type: string } }
+        telemetry:
+          type: object
+          properties:
+            durationMs: { type: number }
+            tokens:
+              type: object
+              properties:
+                input:  { type: number }
+                output: { type: number }
+        error:
+          type: string
+          nullable: true

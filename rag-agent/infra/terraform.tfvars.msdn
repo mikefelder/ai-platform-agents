@@ -1,0 +1,31 @@
+# MSDN PoC deployment values (ai-lz-rg-msdn-mb44x / i40e suffix)
+
+subscription_id = "1784740a-1cf6-416b-b3db-bda6985970aa"
+
+# --- ALZ resource references ---
+resource_group_name            = "ai-lz-rg-msdn-mb44x"
+location                       = "australiaeast"
+container_app_environment_name = "ai-alz-container-app-env-i40e"
+alz_vnet_name                  = "ai-lz-vnet-msdn"
+container_registry_name        = "genaicri40e"
+log_analytics_workspace_name   = "ai-alz-law"
+apim_name                      = "ai-alz-apim-i40e"
+key_vault_name                 = "genai-kv-i40e"
+ai_services_name               = "ai-foundry-i40e"
+ai_search_name                 = "ai-alz-ks-ai-search-i40e"
+azure_ai_deployment            = "gpt-4.1"
+
+# --- UC1 workload config ---
+# Pinned Apr 29 to match live revision 0000005 (out-of-band cr30 push)
+# while TC-3 ingress fix is applied. To rev forward: bump the VERSION
+# file, run `make acr-build`, then set this to "v$(cat VERSION)" and re-apply.
+rag_image_tag    = "cr30"
+rag_min_replicas = 1
+rag_max_replicas = 2
+search_index_name = "knowledge-base-docs"
+
+tags = {
+  workload    = "uc1-rag-agent"
+  program     = "uaip"
+  environment = "poc-msdn"
+}

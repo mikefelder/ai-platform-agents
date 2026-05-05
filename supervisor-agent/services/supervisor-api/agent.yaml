@@ -1,0 +1,11 @@
+kind: hosted
+name: supervisor-agent
+description: >
+  Multi-Agent Supervisor — coordinates specialized agents
+  across Azure and AWS for knowledge retrieval, compliance, and operational workflows.
+protocols:
+  - protocol: responses
+    version: 1.0.0
+resources:
+  cpu: "0.5"
+  memory: 1Gi

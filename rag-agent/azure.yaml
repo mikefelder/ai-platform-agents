@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: chat-with-your-data-solution-accelerator
+metadata:
+   template: chat-with-your-data-solution-accelerator@1.7.0
+
+requiredVersions:
+  azd: '>= 1.18.0 != 1.23.9'
+
+hooks:
+  postprovision:
+    # run: ./infra/prompt-flow/create-prompt-flow.sh
+    posix:
+      shell: sh
+      run: chmod +x ./scripts/parse_env.sh && ./scripts/parse_env.sh
+    windows:
+      shell: pwsh
+      run: ./scripts/parse_env.ps1
+services:
+  web:
+    project: ./code
+    language: py
+    host: appservice
+    dist: ./dist
+    # Use resourceName
+    resourceName: ${SERVICE_WEB_RESOURCE_NAME}
+    hooks:
+      prepackage:
+        windows:
+          shell: pwsh
+          run: ../scripts/package_frontend.ps1
+          interactive: true
+          continueOnError: false
+        posix:
+          shell: sh
+          run: ../scripts/package_frontend.sh
+          interactive: true
+          continueOnError: false
+
+  adminweb:
+    project: ./code/backend
+    language: py
+    host: appservice
+    # Use resourceName
+    resourceName: ${SERVICE_ADMINWEB_RESOURCE_NAME}
+    hooks:
+      prepackage:
+        windows:
+          shell: pwsh
+          run: poetry install; poetry export -o requirements.txt
+          continueOnError: false
+        posix:
+          shell: sh
+          run: poetry install; poetry export -o requirements.txt
+          continueOnError: false
+
+  function:
+    project: ./code/backend/batch
+    language: py
+    host: function
+    # Use resourceName
+    resourceName: ${SERVICE_FUNCTION_RESOURCE_NAME}
+    hooks:
+      prepackage:
+        windows:
+          shell: pwsh
+          run: poetry export -o requirements.txt --without-hashes; pip install -r requirements.txt
+          continueOnError: false
+        posix:
+          shell: sh
+          run: poetry export -o requirements.txt --without-hashes; pip install -r requirements.txt
+          continueOnError: false

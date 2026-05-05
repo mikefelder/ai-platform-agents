@@ -1,0 +1,35 @@
+# Deployment values — copy to terraform.tfvars and adjust as needed.
+
+subscription_id = "29331f2c-3071-472c-a91e-1daf1ea93d54"
+
+# --- ALZ resource references (ai-lz-rg-standalone-m8n6l) ---
+resource_group_name            = "ai-lz-rg-standalone-m8n6l"
+location                       = "australiaeast"
+container_app_environment_name = "ai-alz-container-app-env-i3ro"
+container_registry_name        = "genaicri3ro"
+log_analytics_workspace_name   = "ai-alz-law"
+apim_name                      = "ai-alz-apim-i3ro"
+key_vault_name                 = "genai-kv-i3ro"
+
+# --- UC2 workload config ---
+supervisor_image_tag = "latest"
+
+uc1_rag_endpoint = "https://ca-uc1-rag-agent.<CAE-FQDN>"
+
+aws_bedrock_endpoint     = "https://bedrock-agentcore.ap-southeast-2.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aap-southeast-2%3A948302543286%3Aruntime%2Fpoc_agent-GLAhGwHS0I/invocations?qualifier=DEFAULT"
+aws_bedrock_gateway_mode = "sync"
+aws_bedrock_agents       = ["compliance"]
+
+# --- AWS OIDC federation (get from AWS engineer) ---
+# Leave empty to deploy without the federated credential; add values later.
+# aws_oidc_issuer  = "https://..."
+# aws_oidc_subject = "..."
+
+supervisor_min_replicas = 1
+supervisor_max_replicas = 3
+
+tags = {
+  workload    = "uc2-supervisor-agent"
+  program     = "uaip"
+  environment = "poc"
+}

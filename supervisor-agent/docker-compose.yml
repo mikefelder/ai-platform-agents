@@ -1,0 +1,15 @@
+services:
+  supervisor-api:
+    build:
+      context: ./services/supervisor-api
+    ports:
+      - "8088:8088"
+    environment:
+      # Inter-agent calls must traverse APIM (TC-3 zero bypass).
+      # Override per environment; defaults assume local stub gateway.
+      - UC1_RAG_ENDPOINT=${UC1_RAG_ENDPOINT:-http://localhost:8001/uc1}
+      - UC3_GOVERNANCE_ENDPOINT=${UC3_GOVERNANCE_ENDPOINT:-http://localhost:8001/uc3}
+      - AWS_BEDROCK_GATEWAY_URL=${AWS_BEDROCK_GATEWAY_URL:-http://localhost:8001/uc2-bedrock}
+      - APIM_SUBSCRIPTION_KEY=${APIM_SUBSCRIPTION_KEY:-}
+      # Optional: enable Azure Monitor export
+      # - APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=...

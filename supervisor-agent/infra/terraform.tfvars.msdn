@@ -1,0 +1,36 @@
+# MSDN target — i40e ALZ instance
+# Sub: ME-MngEnvMCAP067049-mikefelder-1 (Visual Studio Enterprise)
+
+subscription_id = "1784740a-1cf6-416b-b3db-bda6985970aa"
+
+# --- ALZ resource references (ai-lz-rg-msdn-mb44x / i40e suffix) ---
+resource_group_name            = "ai-lz-rg-msdn-mb44x"
+location                       = "australiaeast"
+container_app_environment_name = "ai-alz-container-app-env-i40e"
+container_registry_name        = "genaicri40e"
+log_analytics_workspace_name   = "ai-alz-law"
+apim_name                      = "ai-alz-apim-i40e"
+key_vault_name                 = "genai-kv-i40e"
+ai_services_name               = "ai-foundry-i40e"
+azure_ai_deployment            = "gpt-4.1"
+
+# --- UC2 workload config ---
+supervisor_image_tag = "v2"
+
+# AWS Bedrock Agent Gateway (ap-southeast-2)
+aws_bedrock_endpoint     = "https://dkzipl1xle.execute-api.ap-southeast-2.amazonaws.com"
+aws_bedrock_gateway_mode = "async"
+aws_bedrock_agents       = ["compliance"]
+
+# Skip federated credential creation in MSDN (no AWS OIDC trust here)
+aws_oidc_issuer  = ""
+aws_oidc_subject = ""
+
+supervisor_min_replicas = 1
+supervisor_max_replicas = 2
+
+tags = {
+  workload    = "uc2-supervisor-agent"
+  program     = "uaip"
+  environment = "poc-msdn"
+}

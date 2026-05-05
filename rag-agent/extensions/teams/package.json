@@ -1,0 +1,39 @@
+{
+    "name": "teams-bot-toolkit",
+    "version": "1.0.0",
+    "description": "Microsoft Teams Toolkit hello world Bot sample",
+    "engines": {
+        "node": "16 || 18"
+    },
+    "author": "Microsoft",
+    "license": "MIT",
+    "main": "./lib/index.js",
+    "scripts": {
+        "dev:teamsfx": "env-cmd --silent -f .localConfigs npm run dev",
+        "dev:teamsfx:testtool": "env-cmd --silent -f .localConfigs.testTool npm run dev",
+        "dev:teamsfx:launch-testtool": "env-cmd --silent -f env/.env.testtool teamsapptester start",
+        "dev": "nodemon --exec node --inspect=9239 --signal SIGINT -r ts-node/register ./index.ts",
+        "build": "tsc --build",
+        "start": "node ./lib/index.js",
+        "watch": "nodemon --exec \"npm run start\"",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "enable-sp": "node ./scripts/enable-service-principal.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com"
+    },
+    "dependencies": {
+        "botbuilder": "^4.23.0",
+        "restify": "^10.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18.19.31",
+        "@types/restify": "^8.5.5",
+        "env-cmd": "^10.1.0",
+        "nodemon": "^3.1.0",
+        "shx": "^0.3.3",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.4.4"
+    }
+}

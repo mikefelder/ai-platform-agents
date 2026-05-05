@@ -1,0 +1,48 @@
+name: RAG Quality Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/backend/**"
+      - "code/tests/evaluation/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "code/backend/**"
+      - "code/tests/evaluation/**"
+  schedule:
+    # Weekly evaluation run every Monday at 02:00 UTC
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+jobs:
+  eval:
+    name: RAG Evaluation
+    runs-on: ubuntu-latest
+    environment: evaluation          # Optional: gate on environment approval
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: pip install poetry --quiet
+
+      - name: Install dependencies
+        run: poetry install --with dev --no-interaction
+        env:
+          POETRY_VIRTUALENVS_IN_PROJECT: "true"
+
+      - name: Run RAG quality evaluation
+        run: poetry run pytest code/tests/evaluation/test_rag_quality.py -v --tb=short
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          # Optional: set to "mock-workspace-id" to run entirely offline
+          LOG_ANALYTICS_WORKSPACE_ID: ${{ vars.LOG_ANALYTICS_WORKSPACE_ID }}

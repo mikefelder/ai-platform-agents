@@ -1,0 +1,11 @@
+kind: hosted
+name: rag-knowledge-agent
+description: >
+  RAG Knowledge Agent — retrieval-augmented generation
+  over indexed documents using Azure AI Search and Azure OpenAI.
+protocols:
+  - protocol: responses
+    version: 1.0.0
+resources:
+  cpu: "0.5"
+  memory: 1Gi
