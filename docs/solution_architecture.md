@@ -27,50 +27,50 @@ The AI Agent Platform is an enterprise AI orchestration platform that centralize
 │                                                                                 │
 │  ┌───────────────────────────────────────────────────────────────────────────┐  │
 │  │                    Azure API Management (AI Gateway)                      │  │
-│  │  /rag/*  → RAG Agent       Rate limiting, content safety,            │   │
-│  │  /supervisor/*  → Supervisor Agent       prompt injection detection,              │   │
-│  │  /governance/*  → Governance Hub       W3C traceparent injection,               │   │
-│  │  /otel/* → OTEL Collector       request logging for FinOps               │   │
+│  │  /rag/*  → RAG Agent       Rate limiting, content safety,                 │  │
+│  │  /supervisor/*  → Supervisor Agent       prompt injection detection,      │  │
+│  │  /governance/*  → Governance Hub       W3C traceparent injection,         │  │
+│  │  /otel/* → OTEL Collector       request logging for FinOps                │  │
 │  └─────────────────────────────┬─────────────────────────────────────────────┘  │
 │                                │                                                │
 │  ┌─────────────────────────────┼─────────────────────────────────────────────┐  │
 │  │         Azure Container Apps Environment (Internal ILB)                   │  │
 │  │                                                                           │  │
-│  │  ┌─────────────────┐  ┌─────────────────────────────────────────────┐    │   │
-│  │  │  RAG Agent  │  │  Supervisor Agent Agent                      │    │    │
-  │  │  gpt-4.1-mini   │  │  (Agent Framework SDK, port 8088)          │    │     │
-  │  │  AI Search tool │  │  ┌───────────┐     Fan-out (concurrent)    │    │     │
-  │  │  internal-only  │  │  │ Supervisor │──┬──┬──┬──┐                │    │     │
-  │  │  Port 8088      │  │  │  gpt-4.1   │  │  │  │  │                │    │     │
-  │  └─────────────────┘  │  └───────────┘  │  │  │  │                │    │      │
-  │                        │   ┌──────┐ ┌────┴┐┌┴───┐┌┴────────┐      │    │      │
-  │  ┌─────────────────┐  │   │Know- │ │Comp-││Bed- ││Governan-│      │    │      │
-  │  │  Governance Hub │  │   │ledge │ │lianc││rock ││ce       │      │    │      │
-  │  │  FastAPI :8000  │  │   │4.1m  │ │o4-m ││AWS  ││gpt-4.1  │      │    │      │
-│  │  │  9 API routers  │  │   └──┬───┘ └──┬──┘└──┬──┘└──┬──────┘      │    │     │
-│  │  └─────────────────┘  │      └────────┴───┬──┴──────┘              │    │    │
-│  │                        │           ┌──────┴──────┐                  │    │   │
-│  │  ┌─────────────────┐  │           │ Aggregator  │                  │    │    │
-│  │  │  OTEL Collector │  │           └──────┬──────┘                  │    │    │
-│  │  │  Port 4318      │  │           ┌──────┴──────┐                  │    │    │
-│  │  │  OTLP/HTTP      │  │           │ Synthesizer │                  │    │    │
-│  │  └─────────────────┘  │           │  gpt-4.1    │                  │    │    │
-│  │                        │           └─────────────┘                  │    │   │
-│  │  ┌─────────────────┐  │            Port 8088                       │    │    │
-│  │  │  Frontend       │  └─────────────────────────────────────────────┘    │   │
-│  │  │  React/nginx    │                                                     │   │
-│  │  │  Port 8080      │                                                     │   │
-│  │  └─────────────────┘                                                     │   │
+│  │  ┌─────────────────┐  ┌─────────────────────────────────────────┐         │  │
+│  │  │  RAG Agent      │  │  Supervisor Agent Agent                 │         │  │
+│  │  │  gpt-4.1-mini   │  │  (Agent Framework SDK, port 8088)       │         │  │
+│  │  │  AI Search tool │  │  ┌───────────┐     Fan-out (concurrent) │         │  │
+│  │  │  internal-only  │  │  │ Supervisor│──┬──┬──┬───┐             │         │  │
+│  │  │  Port 8088      │  │  │  gpt-4.1  │  │  │  │   │             │         │  │
+│  │  └─────────────────┘  │  └───────────┘  │  │  │   │             │         │  │
+│  │                       │   ┌──────┐ ┌────┴┐┌┴────┐┌┴────────┐    │         │  │
+│  │  ┌─────────────────┐  │   │Know- │ │Comp-││Bed- ││Governan-│    │         │  │
+│  │  │  Governance Hub │  │   │ledge │ │lianc││rock ││ce       │    │         │  │
+│  │  │  FastAPI :8000  │  │   │4.1m  │ │o4-m ││AWS  ││gpt-4.1  │    │         │  │
+│  │  │  9 API routers  │  │   └──┬───┘ └──┬──┘└──┬──┘└──┬──────┘    │         │  │
+│  │  └─────────────────┘  │      └────────┴───┬──┴──────┘           │         │  │
+│  │                       │           ┌───────┴─────┐               │         │  │
+│  │  ┌─────────────────┐  │           │ Aggregator  │               │         │  │
+│  │  │  OTEL Collector │  │           └──────┬──────┘               │         │  │
+│  │  │  Port 4318      │  │           ┌──────┴──────┐               │         │  │
+│  │  │  OTLP/HTTP      │  │           │ Synthesizer │               │         │  │
+│  │  └─────────────────┘  │           │  gpt-4.1    │               │         │  │
+│  │                       │           └─────────────┘               │         │  │
+│  │  ┌─────────────────┐  │            Port 8088                    │         │  │
+│  │  │  Frontend       │  └─────────────────────────────────────────┘         │  │
+│  │  │  React/nginx    │                                                      │  │
+│  │  │  Port 8080      │                                                      │  │
+│  │  └─────────────────┘                                                      │  │
 │  └───────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  ┌──────────────┐ ┌──────────────┐ ┌───────────┐ ┌────────────────────────┐     │
 │  │Azure OpenAI  │ │Azure AI      │ │ Cosmos DB │ │ Log Analytics          │     │
-│  │gpt-4.1      │ │Search        │ │ Incidents │ │ ┌────────────────────┐ │      │
-│  │gpt-4.1-mini │ │knowledge-   │ │ Workflows │ │ │Microsoft Sentinel │ │       │
-│  │o4-mini      │ │docs (6 docs) │ │           │ │ │5 analytics rules  │ │       │
+│  │gpt-4.1       │ │Search        │ │ Incidents │ │ ┌────────────────────┐ │     │
+│  │gpt-4.1-mini  │ │knowledge-    │ │ Workflows │ │ │Microsoft Sentinel  │ │     │
+│  │o4-mini       │ │docs (6 docs) │ │           │ │ │5 analytics rules   │ │     │
 │  └──────────────┘ └──────────────┘ └───────────┘ │ └────────────────────┘ │     │
-│                                                    │ App Insights (per service) │    │
-│  ┌──────────────┐ ┌──────────────┐ ┌───────────┐ │ FinOps Workbook       │      │
+│                                                  │ App Insights (per svc) │     │
+│  ┌──────────────┐ ┌──────────────┐ ┌───────────┐ │ FinOps Workbook        │     │
 │  │ ACR          │ │ Service Bus  │ │Event Grid │ └────────────────────────┘     │
 │  │ genaicri40e  │ │ Incidents    │ │ Triggers  │                                │
 │  └──────────────┘ └──────────────┘ └───────────┘                                │
@@ -84,12 +84,12 @@ The AI Agent Platform is an enterprise AI orchestration platform that centralize
 │  │  AWS Agent Gateway (Serverless)                              │               │
 │  │  API Gateway → Lambda Functions → DynamoDB                   │               │
 │  │                                                              │               │
-│  │  POST /agents/{name}/invoke  → 202 Accepted + executionId   │                │
+│  │  POST /agents/{name}/invoke  → 202 Accepted + executionId    │               │
 │  │  GET  /executions/{id}       → Poll for completion           │               │
 │  │  GET  /health                → Health check                  │               │
 │  │                                                              │               │
-│  │  Bedrock: Claude Haiku 4.5 (fallback model)                 │                │
-│  │  OTEL → Azure Monitor (same trace as Azure spans)           │                │
+│  │  Bedrock: Claude Haiku 4.5 (fallback model)                  │               │
+│  │  OTEL → Azure Monitor (same trace as Azure spans)            │               │
 │  └──────────────────────────────────────────────────────────────┘               │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
