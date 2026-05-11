@@ -1,0 +1,62 @@
+version: 2
+
+updates:
+  - package-ecosystem: "pip"
+    directories:
+      - "/bedrock-gateway/services/gateway"
+      - "/rag-agent"
+      - "/rag-agent/tests/e2e-test"
+      - "/rag-agent/tests/llm-evaluator"
+      - "/supervisor-agent/services/supervisor-api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "npm"
+    directories:
+      - "/rag-agent"
+      - "/rag-agent/code/frontend"
+      - "/rag-agent/extensions/teams"
+      - "/rag-agent/tests/integration/ui"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:15"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "terraform"
+    directories:
+      - "/bedrock-gateway/infra"
+      - "/rag-agent/infra"
+      - "/supervisor-agent/infra"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:30"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directories:
+      - "/rag-agent/.devcontainer"
+      - "/rag-agent/services/rag-agent"
+      - "/supervisor-agent/services/supervisor-api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:45"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker-compose"
+    directory: "/rag-agent/docker"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 2
