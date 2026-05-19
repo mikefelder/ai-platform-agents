@@ -954,20 +954,20 @@ psutil = ">=5.9,<8"
 
 [[package]]
 name = "azure-search-documents"
-version = "11.6.0b1"
-description = "Microsoft Azure Cognitive Search Client Library for Python"
+version = "12.0.0"
+description = "Microsoft Corporation Azure Search Documents Client Library for Python"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "azure-search-documents-11.6.0b1.tar.gz", hash = "sha256:8bf1e9110515b6e750bdcdfc67d1a80c8b10588ac4fbd4ac0d4ff4f11ae24cb6"},
-    {file = "azure_search_documents-11.6.0b1-py3-none-any.whl", hash = "sha256:1d2273b85b366c1f23c73e4404b604583e35318f84615676c8ce5c27afab037b"},
+    {file = "azure_search_documents-12.0.0-py3-none-any.whl", hash = "sha256:d88114e4179cd753845711042380a4571e7faa8619addf5e017928ebe37fc0d1"},
+    {file = "azure_search_documents-12.0.0.tar.gz", hash = "sha256:8e6d73ec0ed1623083435b757e34324db65d72d4e09cca061a59fc7e90c8ddbc"},
 ]
 
 [package.dependencies]
-azure-common = ">=1.1,<2.0"
-azure-core = ">=1.28.0,<2.0.0"
-isodate = ">=0.6.0"
+azure-core = ">=1.37.0"
+isodate = ">=0.6.1"
+typing-extensions = ">=4.6.0"
 
 [[package]]
 name = "azure-storage-blob"
@@ -8599,4 +8599,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "5abee003caa78cda3f973992886f286925288c734d78810dea206454de9c5dfe"
+content-hash = "7266c11999aeaa43e2e4131a7f92a7bbe43719ae92037a99e07de949b17629e9"
