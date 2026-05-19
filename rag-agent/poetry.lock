@@ -839,20 +839,20 @@ dev = ["azure-functions-durable", "coverage", "flake8 (>=4.0.1,<4.1.0) ; python_
 
 [[package]]
 name = "azure-identity"
-version = "1.25.2"
+version = "1.25.3"
 description = "Microsoft Azure Identity Library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "dev", "prompt-flow"]
 files = [
-    {file = "azure_identity-1.25.2-py3-none-any.whl", hash = "sha256:1b40060553d01a72ba0d708b9a46d0f61f56312e215d8896d836653ffdc6753d"},
-    {file = "azure_identity-1.25.2.tar.gz", hash = "sha256:030dbaa720266c796221c6cdbd1999b408c079032c919fef725fcc348a540fe9"},
+    {file = "azure_identity-1.25.3-py3-none-any.whl", hash = "sha256:f4d0b956a8146f30333e071374171f3cfa7bdb8073adb8c3814b65567aa7447c"},
+    {file = "azure_identity-1.25.3.tar.gz", hash = "sha256:ab23c0d63015f50b630ef6c6cf395e7262f439ce06e5d07a64e874c724f8d9e6"},
 ]
 
 [package.dependencies]
 azure-core = ">=1.31.0"
 cryptography = ">=2.5"
-msal = ">=1.31.0"
+msal = ">=1.35.1"
 msal-extensions = ">=1.2.0"
 typing-extensions = ">=4.0.0"
 
@@ -3979,14 +3979,14 @@ markers = {main = "python_version <= \"3.12\""}
 
 [[package]]
 name = "msal"
-version = "1.35.0"
+version = "1.36.0"
 description = "The Microsoft Authentication Library (MSAL) for Python library enables your app to access the Microsoft Cloud by supporting authentication of users with Microsoft Azure Active Directory accounts (AAD) and Microsoft Accounts (MSA) using industry standard OAuth2 and OpenID Connect."
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "dev", "prompt-flow"]
 files = [
-    {file = "msal-1.35.0-py3-none-any.whl", hash = "sha256:baf268172d2b736e5d409689424d2f321b4142cab231b4b96594c86762e7e01d"},
-    {file = "msal-1.35.0.tar.gz", hash = "sha256:76ab7513dbdac88d76abdc6a50110f082b7ed3ff1080aca938c53fc88bc75b51"},
+    {file = "msal-1.36.0-py3-none-any.whl", hash = "sha256:36ecac30e2ff4322d956029aabce3c82301c29f0acb1ad89b94edcabb0e58ec4"},
+    {file = "msal-1.36.0.tar.gz", hash = "sha256:3f6a4af2b036b476a4215111c4297b4e6e236ed186cd804faefba23e4990978b"},
 ]
 
 [package.dependencies]
@@ -8599,4 +8599,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "7266c11999aeaa43e2e4131a7f92a7bbe43719ae92037a99e07de949b17629e9"
+content-hash = "fa076ce9d0f308528aaafb0586b8b0407e294699e738293aa54a285669d6f027"
