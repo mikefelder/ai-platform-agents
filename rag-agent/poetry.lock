@@ -701,18 +701,17 @@ typing-extensions = ">=4.0.1"
 
 [[package]]
 name = "azure-ai-ml"
-version = "1.31.0"
+version = "1.33.0"
 description = "Microsoft Azure Machine Learning Client Library for Python"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main", "prompt-flow"]
 files = [
-    {file = "azure_ai_ml-1.31.0-py3-none-any.whl", hash = "sha256:e2eb928660b10245349dfd1b8e92a598bd0df8af492d48edfcaf0b2bd621702d"},
-    {file = "azure_ai_ml-1.31.0.tar.gz", hash = "sha256:ba3f00df768292e197c47a03eb8eeb36d70bc865fca3fcf67738e0f124cc0d1c"},
+    {file = "azure_ai_ml-1.33.0-py3-none-any.whl", hash = "sha256:44a7898e4f5ce548ebd48f1df5b1606803364f8bb9dfa94dddaf5c00412c6d1a"},
+    {file = "azure_ai_ml-1.33.0.tar.gz", hash = "sha256:a52022ff2b70a1b039b468fefc1af87e9850cf3a22f4ba97e957d8b6296f5d5e"},
 ]
 
 [package.dependencies]
-azure-common = ">=1.1"
 azure-core = ">=1.23.0"
 azure-mgmt-core = ">=1.3.0"
 azure-monitor-opentelemetry = "*"
@@ -760,7 +759,7 @@ version = "1.1.28"
 description = "Microsoft Azure Client Library for Python (Common)"
 optional = false
 python-versions = "*"
-groups = ["main", "prompt-flow"]
+groups = ["main"]
 files = [
     {file = "azure-common-1.1.28.zip", hash = "sha256:4ac0cd3214e36b6a1b6a442686722a5d8cc449603aa833f3f0f40bda836704a3"},
     {file = "azure_common-1.1.28-py2.py3-none-any.whl", hash = "sha256:5c12d3dcf4ec20599ca6b0d3e09e86e146353d443e7fcc050c9a19c1f9df20ad"},
