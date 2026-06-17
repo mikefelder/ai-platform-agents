@@ -1,0 +1,125 @@
+# Automatically merges Dependabot PRs that have no merge conflicts.
+# After a successful merge an email is sent to the maintainer.
+#
+# EMAIL NOTIFICATIONS
+# -------------------
+# Notifications are ENABLED by default.
+# To disable, add a repository variable:
+#   Name:  DEPENDABOT_NOTIFY_EMAIL
+#   Value: false
+#
+# Required secrets for email (only needed when notifications are enabled):
+#   MAIL_SERVER        - SMTP host          (e.g. smtp.gmail.com)
+#   MAIL_PORT          - SMTP port          (e.g. 587)
+#   MAIL_USERNAME      - SMTP login
+#   MAIL_PASSWORD      - SMTP password / app-password
+#   MAIL_FROM          - Sender address     (e.g. ci-bot@example.com)
+#   MAINTAINER_EMAIL   - Recipient address
+
+name: Dependabot Auto-Merge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Check & Auto-Merge
+    runs-on: ubuntu-latest
+
+    # Only process pull requests raised by Dependabot
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      # ------------------------------------------------------------------ #
+      # 1. Wait for GitHub to compute the mergeable state                   #
+      #    GitHub may return "UNKNOWN" immediately after a PR is created;   #
+      #    poll until we get a definitive answer (12 attempts × 10 s).      #
+      # ------------------------------------------------------------------ #
+      - name: Wait for mergeable state
+        id: mergeable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Polling for mergeable state on PR #${PR_NUMBER} …"
+          for i in $(seq 1 12); do
+            STATE=$(gh pr view "${PR_NUMBER}" \
+                      --repo "${REPO}" \
+                      --json mergeable \
+                      --jq '.mergeable')
+            echo "  attempt ${i}: mergeable=${STATE}"
+            if [ "${STATE}" != "UNKNOWN" ]; then
+              break
+            fi
+            sleep 10
+          done
+          echo "state=${STATE}" >> "$GITHUB_OUTPUT"
+
+      # ------------------------------------------------------------------ #
+      # 2. Skip with a clear message when the PR cannot be merged cleanly  #
+      # ------------------------------------------------------------------ #
+      - name: Skip – merge conflicts detected
+        if: steps.mergeable.outputs.state == 'CONFLICTING'
+        run: |
+          echo "::warning::PR #${{ github.event.pull_request.number }} has merge conflicts. Skipping auto-merge."
+          exit 0
+
+      - name: Skip – mergeable state still unknown after polling
+        if: steps.mergeable.outputs.state == 'UNKNOWN'
+        run: |
+          echo "::warning::PR #${{ github.event.pull_request.number }} mergeable state could not be determined after polling. Skipping auto-merge."
+          exit 0
+
+      # ------------------------------------------------------------------ #
+      # 3. Merge the PR                                                     #
+      # ------------------------------------------------------------------ #
+      - name: Auto-merge PR
+        if: steps.mergeable.outputs.state == 'MERGEABLE'
+        id: merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr merge "${PR_NUMBER}" \
+            --repo "${REPO}" \
+            --merge \
+            --delete-branch \
+            --subject "chore(deps): auto-merge Dependabot PR #${PR_NUMBER}"
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+
+      # ------------------------------------------------------------------ #
+      # 4. Email the maintainer                                             #
+      # Set repository variable DEPENDABOT_NOTIFY_EMAIL=false to opt out #
+      # ------------------------------------------------------------------ #
+      - name: Notify maintainer by email
+        if: >
+          steps.merge.outputs.merged == 'true' &&
+          vars.DEPENDABOT_NOTIFY_EMAIL != 'false'
+        uses: dawidd6/action-send-mail@v3.9.0
+        with:
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "[auto-merge] Dependabot PR #${{ github.event.pull_request.number }} merged – ${{ github.repository }}"
+          to: ${{ secrets.MAINTAINER_EMAIL }}
+          from: ${{ secrets.MAIL_FROM }}
+          body: |
+            A Dependabot pull request was automatically merged.
+
+            Repository : ${{ github.repository }}
+            PR number  : #${{ github.event.pull_request.number }}
+            PR title   : ${{ github.event.pull_request.title }}
+            PR URL     : ${{ github.event.pull_request.html_url }}
+            Base branch: ${{ github.event.pull_request.base.ref }}
+
+            ---
+            To disable these notifications set the repository variable
+            DEPENDABOT_NOTIFY_EMAIL to "false" in Settings > Secrets and variables > Actions > Variables.
