@@ -1,0 +1,121 @@
+# Automatically merges Dependabot PRs that have no merge conflicts.
+# After a successful merge a GitHub comment @mentioning the maintainer is posted
+# on the PR, triggering a push notification in the GitHub mobile app.
+#
+# GITHUB NOTIFICATIONS
+# --------------------
+# Notifications are ENABLED by default.
+# To disable, add a repository variable:
+#   Name:  DEPENDABOT_NOTIFY_GH
+#   Value: false
+#
+# Set the maintainer's GitHub username so the @mention reaches the right person:
+#   Name:  MAINTAINER_GITHUB_USERNAME
+#   Value: your-github-username   (defaults to "mikefelder" if not set)
+#
+# No secrets are needed – the built-in GITHUB_TOKEN is used for the comment.
+# Make sure you are watching the repository (or have @mention notifications
+# enabled) so GitHub pushes the notification to your mobile app.
+
+name: Dependabot Auto-Merge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Check & Auto-Merge
+    runs-on: ubuntu-latest
+
+    # Only process pull requests raised by Dependabot
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      # ------------------------------------------------------------------ #
+      # 1. Wait for GitHub to compute the mergeable state                   #
+      #    GitHub may return "UNKNOWN" immediately after a PR is created;   #
+      #    poll until we get a definitive answer (12 attempts × 10 s).      #
+      # ------------------------------------------------------------------ #
+      - name: Wait for mergeable state
+        id: mergeable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Polling for mergeable state on PR #${PR_NUMBER} …"
+          for i in $(seq 1 12); do
+            STATE=$(gh pr view "${PR_NUMBER}" \
+                      --repo "${REPO}" \
+                      --json mergeable \
+                      --jq '.mergeable')
+            echo "  attempt ${i}: mergeable=${STATE}"
+            if [ "${STATE}" != "UNKNOWN" ]; then
+              break
+            fi
+            sleep 10
+          done
+          echo "state=${STATE}" >> "$GITHUB_OUTPUT"
+
+      # ------------------------------------------------------------------ #
+      # 2. Skip with a clear message when the PR cannot be merged cleanly  #
+      # ------------------------------------------------------------------ #
+      - name: Skip – merge conflicts detected
+        if: steps.mergeable.outputs.state == 'CONFLICTING'
+        run: |
+          echo "::warning::PR #${{ github.event.pull_request.number }} has merge conflicts. Skipping auto-merge."
+          exit 0
+
+      - name: Skip – mergeable state still unknown after polling
+        if: steps.mergeable.outputs.state == 'UNKNOWN'
+        run: |
+          echo "::warning::PR #${{ github.event.pull_request.number }} mergeable state could not be determined after polling. Skipping auto-merge."
+          exit 0
+
+      # ------------------------------------------------------------------ #
+      # 3. Merge the PR                                                     #
+      # ------------------------------------------------------------------ #
+      - name: Auto-merge PR
+        if: steps.mergeable.outputs.state == 'MERGEABLE'
+        id: merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr merge "${PR_NUMBER}" \
+            --repo "${REPO}" \
+            --merge \
+            --delete-branch \
+            --subject "chore(deps): auto-merge Dependabot PR #${PR_NUMBER}"
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+
+      # ------------------------------------------------------------------ #
+      # 4. Notify the maintainer via a GitHub PR comment (@mention)        #
+      #    This triggers a push notification in the GitHub mobile app.     #
+      #    Set repo variable DEPENDABOT_NOTIFY_GH=false to opt out.       #
+      # ------------------------------------------------------------------ #
+      - name: Notify maintainer via GitHub comment
+        if: >
+          steps.merge.outputs.merged == 'true' &&
+          vars.DEPENDABOT_NOTIFY_GH != 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          REPO: ${{ github.repository }}
+          MAINTAINER: ${{ vars.MAINTAINER_GITHUB_USERNAME || 'mikefelder' }}
+        run: |
+          gh pr comment "${PR_NUMBER}" \
+            --repo "${REPO}" \
+            --body "✅ @${MAINTAINER} This Dependabot PR was automatically merged.
+
+**Repository:** \`${REPO}\`
+**PR:** #${PR_NUMBER} – ${PR_TITLE}
+
+To disable these notifications set the repository variable \`DEPENDABOT_NOTIFY_GH\` to \`false\` in *Settings → Secrets and variables → Actions → Variables*."
