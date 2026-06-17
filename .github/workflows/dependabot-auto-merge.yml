@@ -1,20 +1,21 @@
 # Automatically merges Dependabot PRs that have no merge conflicts.
-# After a successful merge an email is sent to the maintainer.
+# After a successful merge a GitHub comment @mentioning the maintainer is posted
+# on the PR, triggering a push notification in the GitHub mobile app.
 #
-# EMAIL NOTIFICATIONS
-# -------------------
+# GITHUB NOTIFICATIONS
+# --------------------
 # Notifications are ENABLED by default.
 # To disable, add a repository variable:
-#   Name:  DEPENDABOT_NOTIFY_EMAIL
+#   Name:  DEPENDABOT_NOTIFY_GH
 #   Value: false
 #
-# Required secrets for email (only needed when notifications are enabled):
-#   MAIL_SERVER        - SMTP host          (e.g. smtp.gmail.com)
-#   MAIL_PORT          - SMTP port          (e.g. 587)
-#   MAIL_USERNAME      - SMTP login
-#   MAIL_PASSWORD      - SMTP password / app-password
-#   MAIL_FROM          - Sender address     (e.g. ci-bot@example.com)
-#   MAINTAINER_EMAIL   - Recipient address
+# Set the maintainer's GitHub username so the @mention reaches the right person:
+#   Name:  MAINTAINER_GITHUB_USERNAME
+#   Value: your-github-username   (defaults to "mikefelder" if not set)
+#
+# No secrets are needed – the built-in GITHUB_TOKEN is used for the comment.
+# Make sure you are watching the repository (or have @mention notifications
+# enabled) so GitHub pushes the notification to your mobile app.
 
 name: Dependabot Auto-Merge
 
@@ -95,31 +96,26 @@ jobs:
           echo "merged=true" >> "$GITHUB_OUTPUT"
 
       # ------------------------------------------------------------------ #
-      # 4. Email the maintainer                                             #
-      # Set repository variable DEPENDABOT_NOTIFY_EMAIL=false to opt out #
+      # 4. Notify the maintainer via a GitHub PR comment (@mention)        #
+      #    This triggers a push notification in the GitHub mobile app.     #
+      #    Set repo variable DEPENDABOT_NOTIFY_GH=false to opt out.       #
       # ------------------------------------------------------------------ #
-      - name: Notify maintainer by email
+      - name: Notify maintainer via GitHub comment
         if: >
           steps.merge.outputs.merged == 'true' &&
-          vars.DEPENDABOT_NOTIFY_EMAIL != 'false'
-        uses: dawidd6/action-send-mail@v3.9.0
-        with:
-          server_address: ${{ secrets.MAIL_SERVER }}
-          server_port: ${{ secrets.MAIL_PORT }}
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "[auto-merge] Dependabot PR #${{ github.event.pull_request.number }} merged – ${{ github.repository }}"
-          to: ${{ secrets.MAINTAINER_EMAIL }}
-          from: ${{ secrets.MAIL_FROM }}
-          body: |
-            A Dependabot pull request was automatically merged.
+          vars.DEPENDABOT_NOTIFY_GH != 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          REPO: ${{ github.repository }}
+          MAINTAINER: ${{ vars.MAINTAINER_GITHUB_USERNAME || 'mikefelder' }}
+        run: |
+          gh pr comment "${PR_NUMBER}" \
+            --repo "${REPO}" \
+            --body "✅ @${MAINTAINER} This Dependabot PR was automatically merged.
 
-            Repository : ${{ github.repository }}
-            PR number  : #${{ github.event.pull_request.number }}
-            PR title   : ${{ github.event.pull_request.title }}
-            PR URL     : ${{ github.event.pull_request.html_url }}
-            Base branch: ${{ github.event.pull_request.base.ref }}
+**Repository:** \`${REPO}\`
+**PR:** #${PR_NUMBER} – ${PR_TITLE}
 
-            ---
-            To disable these notifications set the repository variable
-            DEPENDABOT_NOTIFY_EMAIL to "false" in Settings > Secrets and variables > Actions > Variables.
+To disable these notifications set the repository variable \`DEPENDABOT_NOTIFY_GH\` to \`false\` in *Settings → Secrets and variables → Actions → Variables*."
