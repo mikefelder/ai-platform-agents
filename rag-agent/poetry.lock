@@ -804,19 +804,22 @@ opentelemetry-api = ">=1.12.0"
 
 [[package]]
 name = "azure-cosmos"
-version = "4.15.0"
+version = "4.16.1"
 description = "Microsoft Azure Cosmos Client Library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "prompt-flow"]
 files = [
-    {file = "azure_cosmos-4.15.0-py3-none-any.whl", hash = "sha256:83c1da7386bcd0df9a15c52116cc35012225d8a72d4f1379938b83ea5eb19fff"},
-    {file = "azure_cosmos-4.15.0.tar.gz", hash = "sha256:be1cf49837c197d9da880ec47fe020a24d679075b89e0e1e2aca8d376b3a5a24"},
+    {file = "azure_cosmos-4.16.1-py3-none-any.whl", hash = "sha256:43717215ec1433c1ea0f0e3d465f9182fb5afff3ae2331e595367122297872f1"},
+    {file = "azure_cosmos-4.16.1.tar.gz", hash = "sha256:fa15d13702b470265a67e2dd9c0794021e6b776856dac6c223dcacc4d8e1d8d1"},
 ]
 
 [package.dependencies]
 azure-core = ">=1.30.0"
 typing-extensions = ">=4.6.0"
+
+[package.extras]
+aio = ["azure-core[aio] (>=1.30.0)"]
 
 [[package]]
 name = "azure-functions"
