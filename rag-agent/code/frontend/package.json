@@ -11,7 +11,7 @@
         "test:watch": "jest --coverage --verbose --watchAll"
     },
     "dependencies": {
-        "@babel/traverse": "^7.29.7",
+        "@babel/traverse": "^8.0.4",
         "@fluentui/react": "^8.125.4",
         "@fluentui/react-icons": "^2.0.328",
         "@fortawesome/fontawesome-svg-core": "^7.2.0",
