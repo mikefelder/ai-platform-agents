@@ -11,7 +11,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.10"
 azure-functions = "1.24.0"
-streamlit = "1.57.0"
+streamlit = "1.59.1"
 python-dotenv = "1.2.2"
 azure-ai-formrecognizer = "3.3.3"
 azure-storage-blob = "12.30.0"
