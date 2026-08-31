@@ -649,14 +649,14 @@ isodate = ">=0.6.1,<1.0.0"
 
 [[package]]
 name = "azure-ai-evaluation"
-version = "1.18.1"
+version = "1.18.3"
 description = "Microsoft Azure Evaluation Library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "azure_ai_evaluation-1.18.1-py3-none-any.whl", hash = "sha256:77b6fd93ab2d56f497a9fa146747d679006e4377b0aaf1d5a85364d95d6dccef"},
-    {file = "azure_ai_evaluation-1.18.1.tar.gz", hash = "sha256:5a7e321678d4286368808770f67b66f8cb97e056ef9d4d86a90bc3e417809ab7"},
+    {file = "azure_ai_evaluation-1.18.3-py3-none-any.whl", hash = "sha256:4c47b6254b7afde551f539cca3ae7ec929cce89111a7e468263a05caeeda7cfe"},
+    {file = "azure_ai_evaluation-1.18.3.tar.gz", hash = "sha256:b157aaf12db585768c0e0b512856b7d667af1ee58e900c36fbfe6ba294fb0535"},
 ]
 
 [package.dependencies]
