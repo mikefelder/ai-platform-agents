@@ -11,7 +11,7 @@ type CitationPanelProps = {
   setIsCitationPanelOpen: (flag: boolean) => void;
 };
 
-function rewriteCitationUrl(markdownText: string) {
+export function rewriteCitationUrl(markdownText: string) {
   return markdownText.replace(
     /\[([^\]]+)\]\(([^)]+)\)/,
     (match, title, url) => {
@@ -19,7 +19,7 @@ function rewriteCitationUrl(markdownText: string) {
         const parsed = new URL(url);
         const blobStorageHost = 'blob.core.windows.net';
 
-        if (parsed.hostname.includes(blobStorageHost)) {
+        if (parsed.hostname === blobStorageHost || parsed.hostname.endsWith(`.${blobStorageHost}`)) {
           // Extract the path after the container name (e.g., /documents/filename or /documents/https://...)
           const pathParts = parsed.pathname.split('/');
           // Remove empty first element and container name, join the rest
