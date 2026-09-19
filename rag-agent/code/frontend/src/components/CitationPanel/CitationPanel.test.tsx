@@ -22,7 +22,7 @@ jest.mock("rehype-raw", () => {
 
 // Your component import
 import { render, screen, fireEvent } from "@testing-library/react";
-import { CitationPanel } from "./CitationPanel";
+import { CitationPanel, rewriteCitationUrl } from "./CitationPanel";
 
 
 describe("CitationPanel", () => {
@@ -100,4 +100,31 @@ describe("CitationPanel", () => {
     expect(setIsCitationPanelOpen).not.toHaveBeenCalled()
   });
 
+});
+
+describe("rewriteCitationUrl", () => {
+  test("rewrites a genuine blob.core.windows.net URL", () => {
+    const markdown =
+      "[doc](https://mystorageaccount.blob.core.windows.net/documents/filename.pdf)";
+    const result = rewriteCitationUrl(markdown);
+    expect(result).toBe("[doc](/api/files/filename.pdf)");
+  });
+
+  test("does not treat a malicious host containing blob.core.windows.net as trusted", () => {
+    const markdown =
+      "[doc](https://evil-example.com/blob.core.windows.net/documents/filename.pdf)";
+    const result = rewriteCitationUrl(markdown);
+    expect(result).toBe(
+      "[doc](https://evil-example.com/blob.core.windows.net/documents/filename.pdf)"
+    );
+  });
+
+  test("does not treat a host with blob.core.windows.net as a suffix-lookalike as trusted", () => {
+    const markdown =
+      "[doc](https://evilblob.core.windows.net.evil.com/documents/filename.pdf)";
+    const result = rewriteCitationUrl(markdown);
+    expect(result).toBe(
+      "[doc](https://evilblob.core.windows.net.evil.com/documents/filename.pdf)"
+    );
+  });
 });
