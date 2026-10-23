@@ -63,7 +63,7 @@ def test_from_metadata_returns_empty_sas_placeholder():
     # Then
     parsed_url = urlparse(document_url)
     file_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path
-    hash_key = hashlib.sha1(f"{file_url}_{idx}".encode("utf-8")).hexdigest()
+    hash_key = hashlib.sha256(f"{file_url}_{idx}".encode("utf-8")).hexdigest()
     hash_key = f"doc_{hash_key}"
 
     assert source_document.id == hash_key
@@ -90,7 +90,7 @@ def test_from_metadata_returns_sas_placeholder():
     # Then
     parsed_url = urlparse(document_url)
     file_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path
-    hash_key = hashlib.sha1(f"{file_url}_{idx}".encode("utf-8")).hexdigest()
+    hash_key = hashlib.sha256(f"{file_url}_{idx}".encode("utf-8")).hexdigest()
     hash_key = f"doc_{hash_key}"
 
     assert source_document.id == hash_key
@@ -123,7 +123,7 @@ def test_from_metadata():
     parsed_url = urlparse(document_url)
     file_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path
     filename = parsed_url.path
-    hash_key = hashlib.sha1(f"{file_url}_{idx}".encode("utf-8")).hexdigest()
+    hash_key = hashlib.sha256(f"{file_url}_{idx}".encode("utf-8")).hexdigest()
     hash_key = f"doc_{hash_key}"
 
     expected_source_document = SourceDocument(
