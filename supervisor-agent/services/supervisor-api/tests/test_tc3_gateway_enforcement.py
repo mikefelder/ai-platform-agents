@@ -11,6 +11,7 @@ from __future__ import annotations
 import sys
 import types
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import httpx
 import pytest
@@ -77,7 +78,7 @@ def test_search_knowledge_sends_apim_key_header(monkeypatch: pytest.MonkeyPatch)
     sent = route.calls.last.request
     assert sent.headers.get("Ocp-Apim-Subscription-Key") == _APIM_KEY
     # Must be an APIM gateway URL, not a direct container FQDN
-    assert "azure-api.net" in str(sent.url)
+    assert urlsplit(str(sent.url)).hostname == urlsplit(_APIM_UC1).hostname
     assert "containerapps.io" not in str(sent.url)
 
 
