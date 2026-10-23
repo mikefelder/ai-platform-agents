@@ -59,6 +59,18 @@ def _underlying(fn):
     return getattr(fn, "func", getattr(fn, "_func", fn))
 
 
+def _is_apim_gateway_url(url: str) -> bool:
+    try:
+        parsed = urlsplit(url)
+    except ValueError:
+        return False
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname is not None
+        and parsed.hostname.endswith(".azure-api.net")
+    )
+
+
 @pytest.mark.parametrize(
     ("url", "expected"),
     [
@@ -104,6 +116,26 @@ def test_search_knowledge_sends_apim_key_header(monkeypatch: pytest.MonkeyPatch)
     assert _is_apim_gateway_url(str(sent.url))
     assert urlsplit(str(sent.url)).hostname == urlsplit(_APIM_UC1).hostname
     assert "containerapps.io" not in str(sent.url)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://evil.example/azure-api.net",
+        "https://azure-api.net.evil.example",
+        "https://notazure-api.net",
+        "https://evil.example/?next=ai-alz.azure-api.net",
+        "http://ai-alz-apim.azure-api.net/uc1",
+        "https://[invalid",
+    ],
+)
+def test_apim_gateway_url_validation_rejects_untrusted_hosts(url: str):
+    assert not _is_apim_gateway_url(url)
+
+
+def test_apim_gateway_url_validation_accepts_apim_subdomains():
+    assert _is_apim_gateway_url("https://ai-alz-apim.azure-api.net/uc1")
+    assert _is_apim_gateway_url("https://gateway.region.azure-api.net/uc1")
 
 
 def test_uc1_endpoint_in_tfvars_is_apim_gateway():
