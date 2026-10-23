@@ -102,6 +102,7 @@ def test_search_knowledge_sends_apim_key_header(monkeypatch: pytest.MonkeyPatch)
     assert sent.headers.get("Ocp-Apim-Subscription-Key") == _APIM_KEY
     # Must be an APIM gateway URL, not a direct container FQDN
     assert _is_apim_gateway_url(str(sent.url))
+    assert urlsplit(str(sent.url)).hostname == urlsplit(_APIM_UC1).hostname
     assert "containerapps.io" not in str(sent.url)
 
 

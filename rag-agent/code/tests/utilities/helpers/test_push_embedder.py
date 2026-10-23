@@ -256,7 +256,7 @@ def test_embed_file_advanced_image_processing_stores_embeddings_in_search_index(
     push_embedder.embed_file(source_url, "some-file-name.jpg")
 
     # then
-    hash_key = hashlib.sha1(f"{host_path}_1".encode("utf-8")).hexdigest()
+    hash_key = hashlib.sha256(f"{host_path}_1".encode("utf-8")).hexdigest()
     expected_id = f"doc_{hash_key}"
 
     llm_helper_mock.generate_embeddings.assert_called_once_with(
