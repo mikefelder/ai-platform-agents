@@ -447,7 +447,7 @@ def test_makes_correct_call_to_store_documents_in_search_index(
     expected_source_url = (
         f"{app_config.get('AZURE_STORAGE_ACCOUNT_ENDPOINT')}{expected_file_path}"
     )
-    hash_key = hashlib.sha1(f"{expected_source_url}_1".encode("utf-8")).hexdigest()
+    hash_key = hashlib.sha256(f"{expected_source_url}_1".encode("utf-8")).hexdigest()
     expected_id = f"doc_{hash_key}"
     verify_request_made(
         mock_httpserver=httpserver,

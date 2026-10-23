@@ -176,7 +176,7 @@ If the image is mostly text, use OCR to extract the text as it is displayed in t
         }
 
     def __generate_document_id(self, source_url: str) -> str:
-        hash_key = hashlib.sha1(f"{source_url}_1".encode("utf-8")).hexdigest()
+        hash_key = hashlib.sha256(f"{source_url}_1".encode("utf-8")).hexdigest()
         return f"doc_{hash_key}"
 
     def __create_image_document(
