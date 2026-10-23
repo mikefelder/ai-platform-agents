@@ -45,6 +45,15 @@ _APIM_UC1 = "https://ai-alz-apim-i3ro.azure-api.net/uc1"
 _APIM_KEY = "test-apim-subscription-key"
 
 
+def _is_apim_gateway_url(url: str) -> bool:
+    parsed = urlsplit(url)
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname is not None
+        and parsed.hostname.endswith(".azure-api.net")
+    )
+
+
 def _underlying(fn):
     """Strip the @tool wrapper and return the raw callable for direct invocation."""
     return getattr(fn, "func", getattr(fn, "_func", fn))
@@ -60,6 +69,20 @@ def _is_apim_gateway_url(url: str) -> bool:
         and parsed.hostname is not None
         and parsed.hostname.endswith(".azure-api.net")
     )
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        ("https://service.azure-api.net/uc1", True),
+        ("https://azure-api.net.evil.com/uc1", False),
+        ("https://evil.com/azure-api.net/uc1", False),
+        ("https://azure-api.net@evil.com/uc1", False),
+        ("http://service.azure-api.net/uc1", False),
+    ],
+)
+def test_apim_gateway_url_requires_https_host_suffix(url: str, expected: bool):
+    assert _is_apim_gateway_url(url) is expected
 
 
 @respx.mock
@@ -91,6 +114,8 @@ def test_search_knowledge_sends_apim_key_header(monkeypatch: pytest.MonkeyPatch)
     assert sent.headers.get("Ocp-Apim-Subscription-Key") == _APIM_KEY
     # Must be an APIM gateway URL, not a direct container FQDN
     assert _is_apim_gateway_url(str(sent.url))
+    assert urlsplit(str(sent.url)).hostname == urlsplit(_APIM_UC1).hostname
+    assert "containerapps.io" not in str(sent.url)
 
 
 @pytest.mark.parametrize(
@@ -127,6 +152,9 @@ def test_uc1_endpoint_in_tfvars_is_apim_gateway():
     endpoint = line.partition("=")[2].strip().strip('"')
     assert _is_apim_gateway_url(endpoint), (
         f"uc1_rag_endpoint must use APIM gateway: {line!r}"
+    )
+    assert "containerapps.io" not in line, (
+        f"uc1_rag_endpoint must NOT use a direct container FQDN: {line!r}"
     )
 
 

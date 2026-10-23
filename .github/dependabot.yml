@@ -14,6 +14,11 @@ updates:
       time: "05:00"
       timezone: "UTC"
     open-pull-requests-limit: 5
+    groups:
+      security-fixes:
+        applies-to: security-updates
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
     directories:
@@ -27,6 +32,11 @@ updates:
       time: "05:15"
       timezone: "UTC"
     open-pull-requests-limit: 5
+    groups:
+      security-fixes:
+        applies-to: security-updates
+        patterns:
+          - "*"
 
   - package-ecosystem: "terraform"
     directories:

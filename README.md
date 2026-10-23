@@ -161,6 +161,44 @@ Each agent specifies its model in `agents.yaml`. The platform supports:
 | Security | Managed Identity, OIDC federation, VNet isolation |
 | Frontend | React 19 + TypeScript + React Flow |
 
+## Dependency Security Updates
+
+Dependabot checks dependencies weekly. Python and npm security fixes are grouped
+separately from routine version updates to reduce the number of remediation PRs.
+Enable **Dependabot security updates** in the repository's security settings;
+the configuration file alone does not enable this repository setting.
+
+Dependency PRs require manual review. The former conflict-only auto-merge workflow
+has been removed: a mergeable PR is not necessarily compatible. This also removes
+its post-merge notification comments. Before restoring automatic merging, establish
+passing build/test baselines and require those checks through branch protection or
+a ruleset. Treat major upgrades as separate migrations.
+
+For an initial npm cleanup, run `npm audit` and
+`npm audit fix --package-lock-only --ignore-scripts` in each of:
+
+- `rag-agent`
+- `rag-agent/code/frontend`
+- `rag-agent/extensions/teams`
+- `rag-agent/tests/integration/ui`
+
+Review the lockfile diff, install with `npm ci`, and run the project's build/tests
+before merging. Do not use blanket `npm audit fix --force`: its proposed fixes may
+include breaking upgrades or downgrades. Repeat the audit after updates; transitive
+dependencies may require a targeted parent-package update.
+
+For the Poetry-managed Python project in `rag-agent`, use `poetry check --lock`
+and targeted `poetry update <package>` commands. Exact dependency pins may need
+manifest changes first; update related framework packages together and commit
+`pyproject.toml` and `poetry.lock` consistently. For pip-managed projects, audit
+resolved dependencies in an isolated environment and keep deployment requirements
+aligned with their `pyproject.toml` definitions.
+
+After merging to the default branch, recheck Dependabot for remaining alerts.
+Local npm/Python audit totals are not equivalent to GitHub's alert count. Do not
+dismiss alerts merely to reduce the total; document genuinely inapplicable alerts
+or upstream blockers individually.
+
 ## License
 
 MIT
