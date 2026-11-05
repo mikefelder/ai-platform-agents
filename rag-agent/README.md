@@ -159,6 +159,25 @@ scripts/
 - Python 3.12+
 - Access to Azure Container Registry (`genaicri40e`)
 
+### Legacy accelerator Python dependencies
+
+The root `pyproject.toml` and `poetry.lock` cover the legacy accelerator under
+`code/`, separately from the service image under `services/rag-agent/`. This
+environment requires Python 3.11 or newer. Pillow 13.0.0 addresses the critical
+image-decoder and Ghostscript advisories; Streamlit 1.66.1 supports that Pillow
+version. LangChain 0.3.27, Community 0.3.31, and OpenAI 0.3.35 use
+`langchain-core>=0.3.81,<0.4.0` to address serialization injection while retaining
+the existing agent APIs.
+
+The optional local Prompt Flow SDK dependency group was removed because it
+excludes patched Pillow releases. Hosted Prompt Flow orchestration remains
+available through Azure ML; see [Prompt flow](docs/prompt_flow.md).
+
+Poetry uses the approved Microsoft package feed at
+`https://packagefeedproxy.microsoft.io/pypi/simple/` as its primary source, with
+no public-index fallback. PyMeta3 0.5.1 is explicitly retained for Semantic
+Kernel's pybars4 dependency because the feed's resolver metadata omits it.
+
 ### 1. Populate the Knowledge Base
 
 ```bash
