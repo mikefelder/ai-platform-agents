@@ -809,14 +809,14 @@ files = [
 
 [[package]]
 name = "azure-core"
-version = "1.38.2"
+version = "1.41.0"
 description = "Microsoft Azure Core Library for Python"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main", "dev", "prompt-flow"]
 files = [
-    {file = "azure_core-1.38.2-py3-none-any.whl", hash = "sha256:074806c75cf239ea284a33a66827695ef7aeddac0b4e19dda266a93e4665ead9"},
-    {file = "azure_core-1.38.2.tar.gz", hash = "sha256:67562857cb979217e48dc60980243b61ea115b77326fa93d83b729e7ff0482e7"},
+    {file = "azure_core-1.41.0-py3-none-any.whl", hash = "sha256:522b4011e8180b1a3dcd2024396a4e7fe9ac37fb8597db47163d230b5efe892d"},
+    {file = "azure_core-1.41.0.tar.gz", hash = "sha256:f46ff5dfcd230f25cf1c19e8a34b8dc08a337b2503e268bb600a16c00db8ad5a"},
 ]
 
 [package.dependencies]
@@ -1082,24 +1082,24 @@ aio = ["azure-core[aio] (>=1.30.0)"]
 
 [[package]]
 name = "azure-storage-queue"
-version = "12.17.0"
-description = "Microsoft Azure Azure Queue Storage Client Library for Python"
+version = "12.18.1"
+description = "Microsoft Corporation Azure Storage Queue Client Library for Python"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "azure_storage_queue-12.17.0-py3-none-any.whl", hash = "sha256:aaef08ee2613f84a3a85e60a059d29567361e5a2af455298bb0e529f0b47d5a1"},
-    {file = "azure_storage_queue-12.17.0.tar.gz", hash = "sha256:6eb108a88554be371feb2eba9715fa0e3f7baca7b3f00c19ec417fc7ce5b3834"},
+    {file = "azure_storage_queue-12.18.1-py3-none-any.whl", hash = "sha256:791ed52e2aae4b136ded3e530414fda2fdaf4ab356891b017cf77b337609a2a4"},
+    {file = "azure_storage_queue-12.18.1.tar.gz", hash = "sha256:ed52931a9fbff1383a198d2d90b9692535a31e0339193ccfd5aa75cdc1808d1d"},
 ]
 
 [package.dependencies]
-azure-core = ">=1.37.0"
+azure-core = ">=1.38.3"
 cryptography = ">=2.1.4"
 isodate = ">=0.6.1"
 typing-extensions = ">=4.6.0"
 
 [package.extras]
-aio = ["azure-core[aio] (>=1.37.0)"]
+aio = ["azure-core[aio] (>=1.38.3)"]
 
 [[package]]
 name = "babel"
@@ -8957,4 +8957,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "9e2d250218b4259e010c27f074e94085ca9a584b3a8d6f14215f31d2879afad3"
+content-hash = "7146301a244dc99a66755d888cab2c582c1d2f7a39874a095b5d0297de1f8e38"
