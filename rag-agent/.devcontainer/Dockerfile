@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.14-bookworm
+FROM mcr.microsoft.com/devcontainers/python:3.15-bookworm
 
 # Remove Yarn repository to avoid GPG key expiration issue
 RUN rm -f /etc/apt/sources.list.d/yarn.list
