@@ -165,9 +165,14 @@ The root `pyproject.toml` and `poetry.lock` cover the legacy accelerator under
 `code/`, separately from the service image under `services/rag-agent/`. This
 environment requires Python 3.11 or newer. Pillow 13.0.0 addresses the critical
 image-decoder and Ghostscript advisories; Streamlit 1.66.1 supports that Pillow
-version. LangChain 0.3.27, Community 0.3.31, and OpenAI 0.3.35 use
-`langchain-core>=0.3.81,<0.4.0` to address serialization injection while retaining
-the existing agent APIs.
+version. The legacy agent APIs now come from LangChain Classic 1.0.8, with
+Community 0.4.2, `langchain-core>=1.4.4,<2.0.0`, OpenAI integration 1.1.14,
+and text splitters 1.1.2 or newer. These replace the vulnerable LangChain 0.3
+family while preserving tool routing, conversation memory, and document chunking.
+The OpenAI SDK is on the compatible 2.x line, with Semantic Kernel 1.47.0.
+Azure Monitor 1.8.12 or newer uses the patched OpenTelemetry 1.45.x family.
+The lockfile also includes patched OAuthLib, HTTPX2/HTTPCore2, dnspython,
+Filelock, virtualenv, nbconvert, and Black dependencies.
 
 The optional local Prompt Flow SDK dependency group was removed because it
 excludes patched Pillow releases. Hosted Prompt Flow orchestration remains

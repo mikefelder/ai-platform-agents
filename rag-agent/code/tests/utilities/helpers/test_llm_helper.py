@@ -28,6 +28,7 @@ def env_helper_mock():
     with patch("backend.batch.utilities.helpers.llm_helper.EnvHelper") as mock:
         env_helper = mock.return_value
         env_helper.is_auth_type_keys.return_value = True
+        env_helper.USE_APIM_GATEWAY = False
         env_helper.AZURE_OPENAI_ENDPOINT = AZURE_OPENAI_ENDPOINT
         env_helper.AZURE_OPENAI_API_VERSION = AZURE_OPENAI_API_VERSION
         env_helper.OPENAI_API_KEY = OPENAI_API_KEY

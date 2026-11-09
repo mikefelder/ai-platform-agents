@@ -2,7 +2,7 @@ import logging
 from openai import AzureOpenAI
 from typing import List, Union, cast
 from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain_core.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_prompt_execution_settings import (
     AzureChatPromptExecutionSettings,

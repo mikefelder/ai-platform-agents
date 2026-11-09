@@ -1,3 +1,4 @@
+import { vi, vi as jest, type Mock } from "vitest";
 import { screen, waitFor, fireEvent, act, findByText, render } from '@testing-library/react';
 import { ChatHistoryListItemCell } from './ChatHistoryListItemCell'
 import { Conversation } from '../../api/models'
@@ -6,14 +7,14 @@ import React, { useEffect } from 'react'
 import userEvent from '@testing-library/user-event'
 
 // Mock API
-jest.mock('../../api/api', () => ({
+vi.mock('../../api/api', () => ({
   historyRename: jest.fn(),
   historyDelete: jest.fn()
 }))
 
 // Mocking TooltipHost from @fluentui/react
-jest.mock('@fluentui/react', () => {
-  const actual = jest.requireActual('@fluentui/react');
+vi.mock('@fluentui/react', async () => {
+  const actual = await vi.importActual('@fluentui/react');
   return {
     ...actual,
     TooltipHost: ({ children }: { children: React.ReactNode }) => (
@@ -143,7 +144,7 @@ describe('ChatHistoryListItemCell', () => {
   })
 
   test('shows confirmation dialog and deletes item', async () => {
-    ; (historyDelete as jest.Mock).mockResolvedValueOnce({
+    ; (historyDelete as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({})
     })
@@ -167,7 +168,7 @@ describe('ChatHistoryListItemCell', () => {
   })
 
   test('when delete API fails or return false', async () => {
-    ; (historyDelete as jest.Mock).mockResolvedValueOnce({
+    ; (historyDelete as Mock).mockResolvedValueOnce({
       ok: false,
       json: async () => ({})
     })
@@ -184,8 +185,8 @@ describe('ChatHistoryListItemCell', () => {
 
     const confirmDeleteButton = screen.getByRole('button', { name: 'Delete' })
 
-    await act(() => {
-      userEvent.click(confirmDeleteButton)
+    await act(async () => {
+      await userEvent.click(confirmDeleteButton)
     })
 
     await waitFor(async () => {
@@ -256,7 +257,7 @@ describe('ChatHistoryListItemCell', () => {
   })
 
   test('handles input onChange and onKeyDown ENTER events correctly', async () => {
-    ; (historyRename as jest.Mock).mockResolvedValueOnce({
+    ; (historyRename as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({})
     })
@@ -347,7 +348,7 @@ describe('ChatHistoryListItemCell', () => {
 
   test.skip('handles rename save API failed', async () => {
     userEvent.setup()
-      ; (historyRename as jest.Mock).mockRejectedValue({
+      ; (historyRename as Mock).mockRejectedValue({
         ok: false,
         json: async () => ({})
       })
@@ -368,7 +369,7 @@ describe('ChatHistoryListItemCell', () => {
 
     // Simulate the onChange event by typing into the input field
     fireEvent.change(inputItem, { target: { value: 'Updated Chat Change' } });
-    userEvent.click(screen.getByRole('button', { name: 'confirm new title' }))
+    await userEvent.click(screen.getByRole('button', { name: 'confirm new title' }))
 
     await waitFor(() => {
       expect(screen.getByText(/Error: could not rename item/i)).toBeInTheDocument()
@@ -391,7 +392,7 @@ describe('ChatHistoryListItemCell', () => {
       date: new Date().toISOString()
     }
 
-      ; (historyRename as jest.Mock).mockResolvedValueOnce({
+      ; (historyRename as Mock).mockResolvedValueOnce({
         ok: false,
         json: async () => ({ message: 'Title already exists' })
       })
@@ -417,7 +418,7 @@ describe('ChatHistoryListItemCell', () => {
 
 
   test('triggers edit functionality when Enter key is pressed', async () => {
-    ; (historyRename as jest.Mock).mockResolvedValueOnce({
+    ; (historyRename as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: 'Title changed' })
     })
@@ -449,7 +450,7 @@ describe('ChatHistoryListItemCell', () => {
   })
 
   test('successfully saves edited title', async () => {
-    ; (historyRename as jest.Mock).mockResolvedValueOnce({
+    ; (historyRename as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({})
     })
@@ -558,7 +559,7 @@ describe('ChatHistoryListItemCell', () => {
 
   test('handles rename save when the updated text is equal to initial text', async () => {
     userEvent.setup()
-      ; (historyRename as jest.Mock).mockRejectedValue({
+      ; (historyRename as Mock).mockRejectedValue({
         ok: false,
         json: async () => ({ message: 'Title not changed' })
       })
@@ -579,8 +580,8 @@ describe('ChatHistoryListItemCell', () => {
     const inputItem = screen.getByPlaceholderText('Test Chat')
     expect(inputItem).toBeInTheDocument() // Ensure input is there
 
-    await act(() => {
-      userEvent.type(inputItem, 'Test Chat')
+    await act(async () => {
+      await userEvent.type(inputItem, 'Test Chat')
       //fireEvent.change(inputItem, { target: { value: 'Test Chat' } });
     })
     expect(historyRename).not.toHaveBeenCalled()

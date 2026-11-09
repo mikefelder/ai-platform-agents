@@ -1,7 +1,8 @@
 /**
- * @jest-environment jsdom
- * @jest-environment-options {"url": "http://NonDeloyed/"}
+ * @vitest-environment jsdom
+ * @vitest-environment-options {"url": "http://NonDeloyed/"}
  */
+import { vi, vi as jest, type Mock } from "vitest";
 
 import {
   render,
@@ -33,7 +34,7 @@ const DefaultLayoutPropsloderfalse = {
     showHistoryPanel: false,
   };
 
-jest.mock('../../api/api', () => ({
+vi.mock('../../api/api', () => ({
     getUserInfo: jest.fn(), checkAuthEnforced: jest.fn()
 }));
 
@@ -73,8 +74,8 @@ describe("Layout Component", () => {
     const mocklist: any[] = [];
 
     // Test with jsdom environment configured for NonDeloyed hostname
-    ;(getUserInfo as jest.Mock).mockResolvedValue(mocklist)
-    ;(checkAuthEnforced as jest.Mock).mockResolvedValue(true)
+    ;(getUserInfo as Mock).mockResolvedValue(mocklist)
+    ;(checkAuthEnforced as Mock).mockResolvedValue(true)
     await act(async () => {
         render(
           <BrowserRouter>
@@ -87,7 +88,7 @@ describe("Layout Component", () => {
 
   test('test the auth branching auth is false case', async () => {
     const mocklist: any[] = [1,2,3];
-    ;(getUserInfo as jest.Mock).mockResolvedValue(mocklist)
+    ;(getUserInfo as Mock).mockResolvedValue(mocklist)
     await act(async () => {
         render(
           <BrowserRouter>

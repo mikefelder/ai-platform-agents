@@ -71,7 +71,7 @@ def test_run_text_processing_tool_returns_answer_json():
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @pytest.mark.asyncio
 async def test_orchestrate_langchain_to_orchestrate_chat(
     agent_executor_mock, llm_chain_mock, zero_shot_agent_mock
@@ -102,7 +102,7 @@ async def test_orchestrate_langchain_to_orchestrate_chat(
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @pytest.mark.asyncio
 async def test_orchestrate_returns_error_message_on_Exception(
     agent_executor_mock, llm_chain_mock, zero_shot_agent_mock
@@ -126,7 +126,7 @@ async def test_orchestrate_returns_error_message_on_Exception(
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @pytest.mark.asyncio
 async def test_orchestrate_with_content_safety_input_blocked(
     agent_executor_mock, llm_chain_mock, zero_shot_agent_mock
@@ -151,7 +151,7 @@ async def test_orchestrate_with_content_safety_input_blocked(
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @pytest.mark.asyncio
 async def test_orchestrate_with_content_safety_output_blocked(
     agent_executor_mock, llm_chain_mock, zero_shot_agent_mock
@@ -181,7 +181,7 @@ async def test_orchestrate_with_content_safety_output_blocked(
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @pytest.mark.asyncio
 async def test_orchestrate_with_chat_history_builds_memory(
     agent_executor_mock, llm_chain_mock, zero_shot_agent_mock
@@ -218,7 +218,7 @@ async def test_orchestrate_with_chat_history_builds_memory(
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @pytest.mark.asyncio
 async def test_orchestrate_with_answer_json_parse_exception_creates_fallback_answer(
     agent_executor_mock, llm_chain_mock, zero_shot_agent_mock
@@ -248,7 +248,7 @@ async def test_orchestrate_with_answer_json_parse_exception_creates_fallback_ans
 
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.ZeroShotAgent")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.LLMChain")
-@patch("langchain.agents.AgentExecutor.from_agent_and_tools")
+@patch("backend.batch.utilities.orchestrator.lang_chain_agent.AgentExecutor.from_agent_and_tools")
 @patch("backend.batch.utilities.orchestrator.lang_chain_agent.PostPromptTool")
 @pytest.mark.asyncio
 async def test_orchestrate_with_post_answering_prompt_validates_answer(

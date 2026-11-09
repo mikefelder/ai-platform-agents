@@ -1,9 +1,9 @@
 import logging
 from typing import List
-from langchain.agents import Tool
-from langchain.memory import ConversationBufferMemory
-from langchain.agents import ZeroShotAgent, AgentExecutor
-from langchain.chains.llm import LLMChain
+from langchain_core.tools import Tool
+from langchain_classic.memory import ConversationBufferMemory
+from langchain_classic.agents import ZeroShotAgent, AgentExecutor
+from langchain_classic.chains.llm import LLMChain
 from langchain_community.callbacks import get_openai_callback
 
 from .orchestrator_base import OrchestratorBase

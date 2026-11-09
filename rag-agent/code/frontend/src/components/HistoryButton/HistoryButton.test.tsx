@@ -1,11 +1,12 @@
+import { vi, vi as jest } from "vitest";
 import React from 'react';
 import { render } from '@testing-library/react';
 import { screen, fireEvent } from '@testing-library/dom';
 import { HistoryButton } from './HistoryButton';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 // Mocking Fluent UI's DefaultButton to focus on the functionality of the HistoryButton component
-jest.mock('@fluentui/react', () => ({
+vi.mock('@fluentui/react', () => ({
   DefaultButton: ({ text, iconProps, onClick, className }: any) => (
     <button className={className} onClick={onClick}>
       {iconProps?.iconName && <span className="icon">{iconProps.iconName}</span>}

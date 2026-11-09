@@ -1,9 +1,10 @@
+import { vi, vi as jest, type Mock } from "vitest";
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { ChatHistoryListItemGroups, GroupedChatHistory } from './ChatHistoryListItemGroups';
 import { Conversation } from '../../api/models';
 import { historyList } from '../../api';
 
-jest.mock('../../api/api', () => ({
+vi.mock('../../api/api', () => ({
   historyList: jest.fn(),
 }))
 const mockGroupedChatHistory = [
@@ -39,7 +40,7 @@ const componentProps = {
   toggleToggleSpinner: mockToggleToggleSpinner
 }
 // Mock the ChatHistoryListItemCell component
-jest.mock('../ChatHistoryListItemCell/ChatHistoryListItemCell', () => ({
+vi.mock('../ChatHistoryListItemCell/ChatHistoryListItemCell', () => ({
   ChatHistoryListItemCell: jest.fn(({ item, onSelect }) => (
       <div data-testid={`mock-cell-${item.id}`} onClick={() => onSelect(item)}>
           {item?.title}
@@ -55,12 +56,12 @@ describe('ChatHistoryListItemGroups', () => {
 
     afterEach(() => {
       jest.clearAllMocks();
-      //(console.error as jest.Mock).mockRestore();
+      //(console.error as Mock).mockRestore();
     });
 
     it('should call handleFetchHistory with the correct offset when the observer is triggered', async () => {
       const responseMock = [{ id: '4', title: 'Chat 4', messages: [], date: new Date().toISOString(), updatedAt: new Date().toISOString() }];
-      (historyList as jest.Mock).mockResolvedValue([...responseMock]);
+      (historyList as Mock).mockResolvedValue([...responseMock]);
       await act(async () => {
         render(
           <ChatHistoryListItemGroups
@@ -82,7 +83,7 @@ describe('ChatHistoryListItemGroups', () => {
 
     it('displays spinner while loading more history', async () => {
       const responseMock = [{ id: '4', title: 'Chat 4', messages: [], date: new Date().toISOString(), updatedAt: new Date().toISOString() }];
-      (historyList as jest.Mock).mockResolvedValue([...responseMock]);
+      (historyList as Mock).mockResolvedValue([...responseMock]);
       await act(async () => {
         render(
           <ChatHistoryListItemGroups
@@ -147,7 +148,7 @@ describe('ChatHistoryListItemGroups', () => {
 
     it('handles API failure gracefully', async () => {
       // Mock the API to reject with an error
-      (historyList as jest.Mock).mockResolvedValue(undefined);
+      (historyList as Mock).mockResolvedValue(undefined);
 
       render(
         <ChatHistoryListItemGroups

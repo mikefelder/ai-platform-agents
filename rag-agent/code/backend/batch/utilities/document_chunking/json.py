@@ -1,7 +1,7 @@
 import json
 from typing import List
 from .document_chunking_base import DocumentChunkingBase
-from langchain.text_splitter import RecursiveJsonSplitter
+from langchain_text_splitters import RecursiveJsonSplitter
 from .chunking_strategy import ChunkingSettings
 from ..common.source_document import SourceDocument
 

@@ -1,4 +1,4 @@
-
+import { vi as jest, type Mock } from "vitest";
 import { multiLingualSpeechRecognizer } from "./SpeechToText";
 
 global.fetch = jest.fn();
@@ -19,7 +19,7 @@ describe("SpeechToText", () => {
       languages: languages
     };
 
-    (global.fetch as jest.Mock).mockResolvedValue(createFetchResponse(true, response));
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(true, response));
 
     const recognizer = await multiLingualSpeechRecognizer();
 
@@ -38,7 +38,7 @@ describe("SpeechToText", () => {
       languages: [""]
     };
 
-    (global.fetch as jest.Mock).mockResolvedValue(createFetchResponse(true, response));
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(true, response));
 
     const recognizer = await multiLingualSpeechRecognizer();
 
@@ -48,12 +48,12 @@ describe("SpeechToText", () => {
   });
 
   it("throws an error if speech config response not ok", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(createFetchResponse(false, {}));
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(false, {}));
 
-    expect(async () => await multiLingualSpeechRecognizer()).rejects.toThrow("Network response was not ok");
+    await expect(multiLingualSpeechRecognizer()).rejects.toThrow("Network response was not ok");
   });
 
   it("throws an error if speech config fetching fails with an error", async () => {
-    (global.fetch as jest.Mock).mockImplementationOnce(() => { throw new Error("Random error"); });
+    (global.fetch as Mock).mockImplementationOnce(() => { throw new Error("Random error"); });
   });
 });

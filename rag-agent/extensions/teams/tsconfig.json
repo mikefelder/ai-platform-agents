@@ -2,8 +2,9 @@
   "compilerOptions": {
     "declaration": true,
     "target": "es2021",
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": false,
     "outDir": "./lib",
     "rootDir": "./",
     "sourceMap": true,

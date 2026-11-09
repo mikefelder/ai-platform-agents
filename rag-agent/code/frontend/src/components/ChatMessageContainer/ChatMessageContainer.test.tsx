@@ -1,17 +1,18 @@
+import { vi, vi as jest } from "vitest";
 import React from "react";
 import { render, screen,fireEvent } from "@testing-library/react";
 import { ChatMessageContainer, ChatMessageContainerProps } from "./ChatMessageContainer";
 //import { Spinner } from "@fluentui/react";
 import { Answer } from "../../components/Answer";
 
-jest.mock("@fluentui/react", () => ({
+vi.mock("@fluentui/react", () => ({
     Spinner: jest.fn(() => <div data-testid="spinner" />),
     SpinnerSize: {
       medium: "medium",
     },
   }));
 
-jest.mock("../../components/Answer", () => ({
+vi.mock("../../components/Answer", () => ({
     Answer: jest.fn((props: any) => <div data-testid="answer-component">
         <p>{props.answer.answer}</p>
         <span>Mock Answer Component</span>

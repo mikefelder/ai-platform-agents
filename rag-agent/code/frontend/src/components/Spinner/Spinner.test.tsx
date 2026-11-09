@@ -1,10 +1,11 @@
+import { vi, vi as jest } from "vitest";
 import { render, screen } from '@testing-library/react';
 import SpinnerComponent from './Spinner';
 import { Spinner } from '@fluentui/react';
 
 // Mock the Fluent UI Spinner component
-jest.mock('@fluentui/react', () => ({
-  ...jest.requireActual('@fluentui/react'),
+vi.mock('@fluentui/react', async () => ({
+  ...await vi.importActual('@fluentui/react'),
   Spinner: jest.fn(() => <div data-testid="fluent-spinner" />),
 }));
 

@@ -1,6 +1,6 @@
 from typing import List
 from .document_chunking_base import DocumentChunkingBase
-from langchain.text_splitter import TokenTextSplitter
+from langchain_text_splitters import TokenTextSplitter
 from .chunking_strategy import ChunkingSettings
 from ..common.source_document import SourceDocument
 

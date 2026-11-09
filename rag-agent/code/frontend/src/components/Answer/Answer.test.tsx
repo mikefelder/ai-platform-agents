@@ -1,5 +1,6 @@
+import { vi, vi as jest, type Mock } from "vitest";
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import {
   render,
   screen,
@@ -10,7 +11,7 @@ import {
 import { Answer } from "./Answer";
 import { conversationResponseWithCitations } from "../../../__mocks__/SampleData";
 
-jest.mock('microsoft-cognitiveservices-speech-sdk', () => {
+vi.mock('microsoft-cognitiveservices-speech-sdk', () => {
   return {
     SpeechConfig: {
       fromAuthorizationToken: jest.fn(),
@@ -18,11 +19,13 @@ jest.mock('microsoft-cognitiveservices-speech-sdk', () => {
     AudioConfig: {
       fromDefaultSpeakerOutput: jest.fn(),
     },
-    SpeechSynthesizer: jest.fn().mockImplementation(() => ({
-      speakTextAsync: jest.fn(),
-      stopSpeakingAsync: jest.fn(),
-      close: jest.fn(),
-    })),
+    SpeechSynthesizer: jest.fn().mockImplementation(function () {
+      return {
+        speakTextAsync: jest.fn(),
+        stopSpeakingAsync: jest.fn(),
+        close: jest.fn(),
+      };
+    }),
     ResultReason: {
       SynthesizingAudioCompleted: 'SynthesizingAudioCompleted',
       Canceled: 'Canceled',
@@ -30,15 +33,16 @@ jest.mock('microsoft-cognitiveservices-speech-sdk', () => {
   };
 });
 
-jest.mock(
+vi.mock(
   "react-markdown",
-  () =>
-    ({ children }: { children: React.ReactNode }) => {
+  () => ({
+    default: ({ children }: { children: React.ReactNode }) => {
       return <div data-testid="mock-react-markdown">{children}</div>;
-    }
+    },
+  })
 );
-jest.mock("remark-gfm", () => () => {});
-jest.mock("remark-supersub", () => () => {});
+vi.mock("remark-gfm", () => ({ default: () => {} }));
+vi.mock("remark-supersub", () => ({ default: () => {} }));
 
 const speechMockData = {
   key: "some-key",
@@ -48,7 +52,7 @@ const speechMockData = {
 };
 
 // Mock the Speech SDK
-jest.mock("microsoft-cognitiveservices-speech-sdk", () => {
+vi.mock("microsoft-cognitiveservices-speech-sdk", () => {
   return {
     SpeechConfig: {
       fromAuthorizationToken: jest.fn(),
@@ -58,22 +62,26 @@ jest.mock("microsoft-cognitiveservices-speech-sdk", () => {
       fromDefaultSpeakerOutput: jest.fn(),
       fromSpeakerOutput: jest.fn().mockReturnValue({}),
     },
-    SpeechSynthesizer: jest.fn().mockImplementation(() => ({
-      speakTextAsync: jest.fn((text, callback) => {
-        callback({
-          audioData: new ArrayBuffer(1024),
-          audioDuration: 52375000,
-          reason: 10,
-        });
-      }),
-      close: jest.fn(),
-    })),
+    SpeechSynthesizer: jest.fn().mockImplementation(function () {
+      return {
+        speakTextAsync: jest.fn((text, callback) => {
+          callback({
+            audioData: new ArrayBuffer(1024),
+            audioDuration: 52375000,
+            reason: 10,
+          });
+        }),
+        close: jest.fn(),
+      };
+    }),
 
-    SpeakerAudioDestination: jest.fn().mockImplementation(() => ({
-      pause: jest.fn(),
-      resume: jest.fn(),
-      close: jest.fn(),
-    })),
+    SpeakerAudioDestination: jest.fn().mockImplementation(function () {
+      return {
+        pause: jest.fn(),
+        resume: jest.fn(),
+        close: jest.fn(),
+      };
+    }),
     ResultReason: {
       SynthesizingAudioCompleted: 10,
       Canceled: 1,
@@ -100,7 +108,7 @@ describe("Answer.tsx", () => {
   });
 
   test("AI Generated Content Incorrect Text should be found", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -121,7 +129,7 @@ describe("Answer.tsx", () => {
   });
 
   test("No Of Citations Should Show 5 references", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -144,7 +152,7 @@ describe("Answer.tsx", () => {
   });
 
   test("On Click references show citations list", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -170,7 +178,7 @@ describe("Answer.tsx", () => {
   });
 
   test("On focus and trigger Enter It should show citations list", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -197,7 +205,7 @@ describe("Answer.tsx", () => {
   });
 
   test("should be able to click play", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -228,7 +236,7 @@ describe("Answer.tsx", () => {
   });
 
   test("should be able to play pause and play again", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -263,7 +271,7 @@ describe("Answer.tsx", () => {
   });
 
   test("should be able to pause after play", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -306,7 +314,7 @@ describe("Answer.tsx", () => {
   });
 
   test("should be able to get synthesized audio after clicking play", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     // let reRender;
@@ -333,7 +341,7 @@ describe("Answer.tsx", () => {
   });
 
   test("on change of isActive prop playing audio should stop", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     let reRender: (ui: React.ReactNode) => void;
@@ -380,7 +388,7 @@ describe("Answer.tsx", () => {
   });
 
   test("on index prop update new synthesizer to be initialized", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     let reRender: (ui: React.ReactNode) => void;
@@ -427,7 +435,7 @@ describe("Answer.tsx", () => {
   });
 
   test("After duration completing it should show Play button", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -461,7 +469,7 @@ describe("Answer.tsx", () => {
   }, 8000);
 
   test("window should Alert when copying the answer", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -485,7 +493,7 @@ describe("Answer.tsx", () => {
     expect(window.alert).toHaveBeenCalledWith("Please consider where you paste this content.");
   });
   test("renders correctly without citations", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
 
@@ -514,7 +522,7 @@ describe("Answer.tsx", () => {
     expect(referencesElement).not.toBeInTheDocument();
   });
   test("should stop audio playback when isActive is false", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
 
@@ -563,7 +571,7 @@ describe("Answer.tsx", () => {
     //expect(pauseBtn).not.toBeInTheDocument(); // Ensure pause button is not there
   });
   test("should initialize new synthesizer on index prop update", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
 
@@ -614,7 +622,7 @@ describe("Answer.tsx", () => {
     //expect(pauseBtn).not.toBeInTheDocument(); // Ensure previous pause button is gone
   });
   test("test the reference is clickabel", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -640,7 +648,7 @@ describe("Answer.tsx", () => {
     })).toBeInTheDocument()
   });
   test("test the reference is key enter", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -666,7 +674,7 @@ describe("Answer.tsx", () => {
     })).toBeInTheDocument()
   });
   test("test the reference is key space", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -692,7 +700,7 @@ describe("Answer.tsx", () => {
     })).toBeInTheDocument()
   });
   test("test the reference is on key enter/space", async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -718,7 +726,7 @@ describe("Answer.tsx", () => {
     })).toBeInTheDocument()
   });
   test('test Generating answer... ', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(
+    (global.fetch as Mock).mockResolvedValue(
       createFetchResponse(true, speechMockData)
     );
     await act(async () => {
@@ -735,7 +743,7 @@ describe("Answer.tsx", () => {
     expect(screen.getByText(/Generating answer.../i)).toBeInTheDocument()
   });
   test('test the api thow error', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false })
+    (global.fetch as Mock).mockResolvedValueOnce({ ok: false })
     const consoleSpy = jest.spyOn(console, 'log');
     let renderref
     await act(async () => {
@@ -757,7 +765,7 @@ describe("Answer.tsx", () => {
     consoleSpy.mockRestore();
   });
   // test('test speech', async () => {
-  //   (global.fetch as jest.Mock).mockResolvedValue(
+  //   (global.fetch as Mock).mockResolvedValue(
   //     createFetchResponse(true, speechMockData)
   //   );
   //   await act(async () => {

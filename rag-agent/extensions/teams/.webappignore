@@ -9,6 +9,8 @@
 *.js.map
 *.ts.map
 *.ts
+# Retain SDK declarations required by the dependency patch integrity checks.
+!/node_modules/**/*.d.ts
 .git*
 .tsbuildinfo
 CHANGELOG.md
