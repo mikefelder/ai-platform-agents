@@ -13,6 +13,12 @@ learn more about prompt flow see:
 
 ## Limitations
 
+The optional `prompt-flow` Poetry dependency group has been removed because the
+published Prompt Flow SDK requires a vulnerable Pillow version. Do not use
+`poetry install --with prompt-flow`. Hosted orchestration still invokes managed
+endpoints through `azure-ai-ml` and does not require the local Prompt Flow SDK.
+Use Azure Machine Learning Studio to author and update flows.
+
 > :warning: This feature is still in development and not ready for use
 
 > :warning: It is required to deploy the accelerator using `azd` to utilize this feature
