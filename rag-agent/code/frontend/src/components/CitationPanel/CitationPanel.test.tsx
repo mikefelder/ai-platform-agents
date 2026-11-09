@@ -1,19 +1,20 @@
+import { vi, vi as jest } from "vitest";
 // Mock the imports
-jest.mock("react-markdown", () => {
+vi.mock("react-markdown", () => {
   return {
     __esModule: true,
     default: () => <div>ReactMarkdown Mock</div>,
   };
 });
 
-jest.mock("remark-gfm", () => {
+vi.mock("remark-gfm", () => {
   return {
     __esModule: true,
     default: () => <div>remarkGfm Mock</div>,
   };
 });
 
-jest.mock("rehype-raw", () => {
+vi.mock("rehype-raw", () => {
   return {
     __esModule: true,
     default: () => <div>rehypeRaw Mock</div>,

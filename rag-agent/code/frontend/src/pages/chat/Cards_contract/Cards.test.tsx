@@ -1,3 +1,4 @@
+import { vi as jest } from "vitest";
 import { render, screen } from '@testing-library/react';
 import  Cards  from './Cards';
 

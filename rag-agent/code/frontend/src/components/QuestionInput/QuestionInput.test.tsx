@@ -1,3 +1,4 @@
+import { vi as jest } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { QuestionInput } from "./QuestionInput";
 import fetch from "isomorphic-fetch";

@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Microsoft Teams Toolkit hello world Bot sample",
     "engines": {
-        "node": "16 || 18"
+        "node": ">=22"
     },
     "author": "Microsoft",
     "license": "MIT",
@@ -13,10 +13,14 @@
         "dev:teamsfx:testtool": "env-cmd --silent -f .localConfigs.testTool npm run dev",
         "dev:teamsfx:launch-testtool": "env-cmd --silent -f env/.env.testtool teamsapptester start",
         "dev": "nodemon --exec node --inspect=9239 --signal SIGINT -r ts-node/register ./index.ts",
+        "postinstall": "node ./scripts/apply-botbuilder-zod-patch.cjs",
+        "prebuild": "node ./scripts/apply-botbuilder-zod-patch.cjs --check",
         "build": "tsc --build",
         "start": "node ./lib/index.js",
+        "prestart": "node ./scripts/apply-botbuilder-zod-patch.cjs --check",
         "watch": "nodemon --exec \"npm run start\"",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "npm run build && npm run test:types && node --test test/*.test.cjs",
+        "test:types": "tsc --project test/tsconfig.types.json",
         "enable-sp": "node ./scripts/enable-service-principal.js"
     },
     "repository": {
@@ -24,8 +28,31 @@
         "url": "https://github.com"
     },
     "dependencies": {
-        "botbuilder": "^4.23.0",
+        "botbuilder": "4.23.3",
         "restify": "^12.0.0"
+    },
+    "overrides": {
+        "botbuilder": {
+            "uuid": "11.1.1",
+            "zod": "4.6.6"
+        },
+        "botbuilder-core": {
+            "uuid": "11.1.1",
+            "zod": "4.6.6"
+        },
+        "botframework-schema": {
+            "uuid": "11.1.1",
+            "zod": "4.6.6"
+        },
+        "botframework-connector": {
+            "zod": "4.6.6"
+        },
+        "botframework-streaming": {
+            "uuid": "11.1.1"
+        },
+        "@azure/msal-node": {
+            "uuid": "11.1.1"
+        }
     },
     "devDependencies": {
         "@types/node": "^25.9.2",

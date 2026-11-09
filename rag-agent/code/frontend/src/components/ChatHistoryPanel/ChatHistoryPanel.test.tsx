@@ -1,10 +1,11 @@
+import { vi, vi as jest } from "vitest";
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ChatHistoryPanel, ChatHistoryPanelProps } from './ChatHistoryPanel';
 import { ChatHistoryListItemGroups } from '../ChatHistoryListItemGroups/ChatHistoryListItemGroups';
 import { DialogType } from '@fluentui/react';
 
 // Mock the ChatHistoryListItemGroups component
-jest.mock('../ChatHistoryListItemGroups/ChatHistoryListItemGroups', () => ({
+vi.mock('../ChatHistoryListItemGroups/ChatHistoryListItemGroups', () => ({
   ChatHistoryListItemGroups: jest.fn(() => <div>Mocked ChatHistoryListItemGroups</div>),
 }));
 

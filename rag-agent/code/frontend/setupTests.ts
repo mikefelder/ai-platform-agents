@@ -1,5 +1,6 @@
-import "@testing-library/jest-dom";
-const { TextDecoder, TextEncoder } = require('node:util')
+import "@testing-library/jest-dom/vitest";
+import { TextDecoder, TextEncoder } from "node:util";
+import { vi } from "vitest";
 
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 initializeIcons();
@@ -13,6 +14,7 @@ class IntersectionObserverMock {
 
   root: Element | null = null; // Required property
   rootMargin: string = '0px'; // Required property
+  scrollMargin: string = '0px';
   thresholds: number[] = [0]; // Required property
 
   constructor(callback: IntersectionObserverCallback, options: IntersectionObserverInit) {
@@ -20,14 +22,14 @@ class IntersectionObserverMock {
     this.options = options;
   }
 
-  observe = jest.fn((target: Element) => {
+  observe = vi.fn((target: Element) => {
     // Simulate intersection with an observer instance
     this.callback([{ isIntersecting: true }] as IntersectionObserverEntry[], this as IntersectionObserver);
   });
 
-  unobserve = jest.fn();
-  disconnect = jest.fn(); // Required method
-  takeRecords = jest.fn(); // Required method
+  unobserve = vi.fn();
+  disconnect = vi.fn(); // Required method
+  takeRecords = vi.fn(); // Required method
 }
 
 // Store the original IntersectionObserver
@@ -41,4 +43,3 @@ afterAll(() => {
   // Restore the original IntersectionObserver
   window.IntersectionObserver = originalIntersectionObserver;
 });
-

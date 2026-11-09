@@ -1,0 +1,164 @@
+{
+  "packages": {
+    "botbuilder": { "version": "4.23.3", "integrity": "sha1-wuQ12LfvviG7anKp98PhkbLnGOQ=" },
+    "botbuilder-core": { "version": "4.23.3", "integrity": "sha1-kxgXbUApoDeHK8sgjwqao09aev8=" },
+    "botframework-connector": { "version": "4.23.3", "integrity": "sha1-2Z3+mJwRUjee+4Syhve37DMxwoo=" },
+    "botframework-schema": { "version": "4.23.3", "integrity": "sha1-pCDvM6GivqQHDDGku9Ib8sGajnE=" },
+    "@azure/msal-node": { "version": "2.16.3", "integrity": "sha1-i4BRUq14CwSNbCszsdTibXtGM2g=" },
+    "zod": { "version": "4.6.6", "integrity": "sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==" }
+  },
+  "files": [
+    {
+      "path": "botbuilder/lib/teamsActivityHandler.js",
+      "original": "a5a72d65001fe98ab5a3d26e17f613beec09eb0dad053fbcaef66ce1c26083dc",
+      "patched": "249fbc5591caea4eb79670ca39ecf2827c64d301c4b2b1deee265d1413eddbaa",
+      "edits": [
+        { "start": 2522, "end": 2534, "text": ".passthrough()" },
+        { "start": 2338, "end": 2350, "text": ".passthrough()" }
+      ]
+    },
+    {
+      "path": "botbuilder-core/lib/configurationServiceClientCredentialFactory.js",
+      "original": "31a8325f59d74a28a3de0fa2880f67c57e7959230eb0c768a8f01efe7eb6c332",
+      "patched": "8b5b261a902cf0a4ef6b6d2c730b33bc7c60af83818f3c98c5bbfbdbb1b961ca",
+      "edits": [{ "start": 3791, "end": 3803, "text": ".passthrough()" }]
+    },
+    {
+      "path": "botbuilder-core/lib/configurationBotFrameworkAuthentication.js",
+      "original": "f6d4e7d7007e90b9b70e895b2fcab88f577f15cdf5733274a623557aa98f1a89",
+      "patched": "60c3a34827cd26bb7f23d38c0beca00ce700fe4bff24f2f1861184a1f6686ef9",
+      "edits": [
+        { "start": 7865, "end": 7875, "text": "err.issues" },
+        { "start": 6193, "end": 6205, "text": ".passthrough()" }
+      ]
+    },
+    {
+      "path": "botbuilder/lib/cloudAdapter.js",
+      "original": "ddb5c4f61201676f0da193c4b87439bb3b04568152c50ef681616dede3a27ff9",
+      "patched": "819caf1fee86ccb4143ed1334a813ff88bf30bf0766e592d6746304865fe0274",
+      "edits": [
+        { "start": 4751, "end": 4772, "text": "z.record(z.string(), z.unknown())" },
+        { "start": 2660, "end": 2681, "text": "z.record(z.string(), z.unknown())" }
+      ]
+    },
+    {
+      "path": "botbuilder-core/lib/storage.js",
+      "original": "a622d7f78b0b1036d4f3fb2065ab20dc6bcdc0dac6989e5a68d266b5fc552d97",
+      "patched": "7f83b5c170f3db26de708d0111cfbb7a72efbc573c8220dc81ae653980e5b856",
+      "edits": [{ "start": 1947, "end": 1968, "text": "z.record(z.string(), z.unknown())" }]
+    },
+    {
+      "path": "botframework-connector/lib/auth/botFrameworkClientImpl.js",
+      "original": "725021a43cbc11877db33a887e66d293be6e816e3b1aacaf8514b87a1c050faf",
+      "patched": "bd8507628f9192d5d05ba201d92d047baad6dc92f56baed1e1b360ce2edcbedb",
+      "edits": [
+        { "start": 6471, "end": 6492, "text": "z.record(z.string(), z.unknown())" },
+        { "start": 3680, "end": 3700, "text": "z.record(z.string(), z.string())" }
+      ]
+    },
+    {
+      "path": "botframework-connector/lib/auth/userTokenClient.js",
+      "original": "d11d6567ba128d99f1cab7ab4e89ef2c4efe6adea3f16243b9eaaed97063423a",
+      "patched": "b20e612f3ed2167cfa04ab9b57d747318e7ae5786f01baa5be674e210c3905fb",
+      "edits": [{ "start": 2031, "end": 2052, "text": "z.record(z.string(), z.unknown())" }]
+    },
+    {
+      "path": "botframework-connector/lib/auth/userTokenClientImpl.js",
+      "original": "12aaeec230b323d19ba50ebee6c1261c8d840b405b66b0e8bb275622729812ca",
+      "patched": "7788599bd3d3917ff90e21e1e7f59b11775c5361e5b633c69e26a40084f09412",
+      "edits": [{ "start": 4365, "end": 4386, "text": "z.record(z.string(), z.unknown())" }]
+    },
+    {
+      "path": "botframework-schema/lib/index.js",
+      "original": "66a3ba6a8adbd334c102c97573a1929581a25308ade852f81b03889bcdab702a",
+      "patched": "139883702f32bebd34038f153b9158c62842fdce9be77f0116f17f8974c46b74",
+      "edits": [
+        { "start": 8381, "end": 8397, "text": "z.record(z.string(), entity)" },
+        { "start": 7257, "end": 7278, "text": "z.record(z.string(), z.unknown())" },
+        { "start": 5988, "end": 6013, "text": "channelData: z.unknown().optional()," },
+        { "start": 5964, "end": 5983, "text": "value: z.unknown().optional()," }
+      ]
+    },
+    {
+      "path": "botbuilder/lib/interfaces/response.d.ts",
+      "original": "2b500963703beea25f98505cefce4268f572a695c205907c9aa2eabd9e91e90e",
+      "patched": "2239f511c7737c5157ea72b7f98b3507f809d63b0e92c8462beac0861660026f",
+      "edits": [{ "start": 454, "end": 468, "text": "" }]
+    },
+    {
+      "path": "botbuilder/lib/zod.d.ts",
+      "original": "911314231fc5b5b80e39ba147d178c973fd4fca0655d2a1c7efb019a11ea10d5",
+      "patched": "1dfc14c5da7c1564c923b94537f3590af1c0c49bd3e5e6a19c864c75366bc1e5",
+      "edits": [
+        { "start": 390, "end": 404, "text": "" },
+        { "start": 282, "end": 296, "text": "" },
+        { "start": 196, "end": 210, "text": "" }
+      ]
+    },
+    {
+      "path": "botbuilder-core/lib/botComponent.d.ts",
+      "original": "234c19156e9f2eb192413de509883e5d3937bc668a936dd58b93aebe5e19524d",
+      "patched": "f48763c27452f3df908bbd243dfc8f166a3e3e15403dccced528d39726c666e6",
+      "edits": [{ "start": 709, "end": 723, "text": "" }]
+    },
+    {
+      "path": "botbuilder-core/lib/configurationBotFrameworkAuthentication.d.ts",
+      "original": "6248ed0f1e8404fa698560935313acfdda7c1c44acadceb214d763c9080d4c45",
+      "patched": "778d92aa74e21c2f6f787e040841eba0f2b2b6407747a899b0a209cc38c3a63c",
+      "edits": [
+        { "start": 2711, "end": 2755, "text": "[key: string]: string | boolean | null | undefined;" },
+        { "start": 1297, "end": 2400, "text": "" }
+      ]
+    },
+    {
+      "path": "botbuilder-core/lib/configurationServiceClientCredentialFactory.d.ts",
+      "original": "d7fafa19d548bb6e07bd04b0170eb68d2e83b58143b34d965cbbb47e9d99366b",
+      "patched": "06a6ade2378ff8e83cd7b9714bad90ca0d110775885b7ebcea3bef2388d0f96a",
+      "edits": [{ "start": 565, "end": 1002, "text": "" }]
+    },
+    {
+      "path": "botframework-schema/lib/index.d.ts",
+      "original": "ed059c223e80774bb009b7500f6c0391162b62e25bccdf01e7ab7a9740dd7259",
+      "patched": "6a47366c3d1add2ae08838ae479deb7c22d80df5f094344072fde22793a62cd7",
+      "edits": [
+        { "start": 37293, "end": 44990, "text": "" },
+        { "start": 30256, "end": 37243, "text": "" },
+        { "start": 29964, "end": 30247, "text": "" },
+        { "start": 29850, "end": 29952, "text": "z.ZodRecord<z.ZodString, z.ZodUnknown>" },
+        { "start": 29678, "end": 29686, "text": "" },
+        { "start": 29508, "end": 29677, "text": "" },
+        { "start": 29356, "end": 29364, "text": "" },
+        { "start": 27548, "end": 29157, "text": "" },
+        { "start": 26846, "end": 27463, "text": "" },
+        { "start": 26103, "end": 26418, "text": "" },
+        { "start": 25517, "end": 25832, "text": "" },
+        { "start": 24885, "end": 24893, "text": "" },
+        { "start": 24783, "end": 24885, "text": "z.ZodRecord<z.ZodString, z.ZodUnknown>" },
+        { "start": 24728, "end": 24736, "text": "" },
+        { "start": 24358, "end": 24727, "text": "" },
+        { "start": 23310, "end": 24045, "text": "" },
+        { "start": 23290, "end": 23298, "text": "" },
+        { "start": 22682, "end": 23289, "text": "" },
+        { "start": 22597, "end": 22609, "text": "z.ZodOptional<z.ZodUnknown>" },
+        { "start": 22554, "end": 22566, "text": "z.ZodOptional<z.ZodUnknown>" },
+        { "start": 22245, "end": 22253, "text": "" },
+        { "start": 21833, "end": 21841, "text": "" },
+        { "start": 21729, "end": 21832, "text": "" },
+        { "start": 21612, "end": 21620, "text": "" },
+        { "start": 21508, "end": 21611, "text": "" },
+        { "start": 21393, "end": 21401, "text": "" },
+        { "start": 21117, "end": 21392, "text": "" },
+        { "start": 20874, "end": 20882, "text": "" },
+        { "start": 20598, "end": 20873, "text": "" },
+        { "start": 19989, "end": 20264, "text": "" },
+        { "start": 19240, "end": 19785, "text": "" },
+        { "start": 18577, "end": 18852, "text": "" },
+        { "start": 18225, "end": 18239, "text": "" },
+        { "start": 18149, "end": 18163, "text": "" },
+        { "start": 17910, "end": 17918, "text": "" },
+        { "start": 17674, "end": 17909, "text": "" },
+        { "start": 17236, "end": 17471, "text": "" }
+      ]
+    }
+  ]
+}

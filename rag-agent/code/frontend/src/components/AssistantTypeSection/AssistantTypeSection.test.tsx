@@ -1,3 +1,4 @@
+import { vi, vi as jest } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { AssistantTypeSection } from "./AssistantTypeSection";
@@ -5,9 +6,9 @@ import { AssistantTypeSection } from "./AssistantTypeSection";
 import Cards from "../../pages/chat/Cards_contract/Cards";
 
 // Mock the Cards component
-jest.mock("../../pages/chat/Cards_contract/Cards", () => () => <div>Mocked Cards Component</div>);
+vi.mock("../../pages/chat/Cards_contract/Cards", () => ({ default: () => <div>Mocked Cards Component</div> }));
 
-jest.mock("../../assets/Azure.svg", () => "mock-azure-svg");
+vi.mock("../../assets/Azure.svg", () => ({ default: "mock-azure-svg" }));
 
 enum assistantTypes {
     default = "default",

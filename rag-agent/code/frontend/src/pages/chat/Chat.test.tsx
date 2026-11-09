@@ -1,3 +1,4 @@
+import { vi, vi as jest, type Mock } from "vitest";
 import React, { ReactNode } from "react";
 import {
   render,
@@ -31,7 +32,7 @@ const data_test_ids = {
     "select_conversation_get_history_response",
   conv_messages: "conv_messages",
 };
-jest.mock("../../components/QuestionInput", () => ({
+vi.mock("../../components/QuestionInput", () => ({
   QuestionInput: jest.fn((props) => {
     const { isListening, onStopClick, onMicrophoneClick } = props;
     return (
@@ -56,7 +57,7 @@ jest.mock("../../components/QuestionInput", () => ({
 }));
 
 // Mock necessary modules and functions
-jest.mock("../../api", () => ({
+vi.mock("../../api", () => ({
   callConversationApi: jest.fn(),
   getAssistantTypeApi: jest.fn(),
   getFrontEndSettings: jest.fn(),
@@ -64,30 +65,31 @@ jest.mock("../../api", () => ({
   historyUpdate: jest.fn(),
   historyRead: jest.fn(),
 }));
-jest.mock(
+vi.mock(
   "react-markdown",
-  () =>
-    ({ children }: { children: React.ReactNode }) => {
+  () => ({
+    default: ({ children }: { children: React.ReactNode }) => {
       return <div data-testid="mock-react-markdown">{children}</div>;
-    }
+    },
+  })
 );
-jest.mock("uuid", () => ({
+vi.mock("uuid", () => ({
   v4: jest.fn(() => "mocked-uuid"),
 }));
-jest.mock("remark-gfm", () => () => {});
-jest.mock("rehype-raw", () => () => {});
-jest.mock("../../util/SpeechToText", () => ({
+vi.mock("remark-gfm", () => ({ default: () => {} }));
+vi.mock("rehype-raw", () => ({ default: () => {} }));
+vi.mock("../../util/SpeechToText", () => ({
   multiLingualSpeechRecognizer: jest.fn(),
 }));
 
-jest.mock("./Cards_contract/Cards", () => {
+vi.mock("./Cards_contract/Cards", () => {
   const Cards = () => (
     <div data-testid="note-list-component">Mocked Card Component</div>
   );
-  return Cards;
+  return { default: Cards };
 });
 
-jest.mock("../layout/Layout", () => {
+vi.mock("../layout/Layout", () => {
   const Layout = (props: LayoutProps) => (
     <div>
       {props.children}
@@ -99,10 +101,10 @@ jest.mock("../layout/Layout", () => {
       </button>
     </div>
   );
-  return Layout;
+  return { default: Layout };
 });
 
-jest.mock("../../components/AssistantTypeSection/AssistantTypeSection", () => ({
+vi.mock("../../components/AssistantTypeSection/AssistantTypeSection", () => ({
   AssistantTypeSection: (props: any) => {
     return (
       <div data-testid={data_test_ids.assistant_type_section}>
@@ -112,13 +114,13 @@ jest.mock("../../components/AssistantTypeSection/AssistantTypeSection", () => ({
   },
 }));
 
-jest.mock("../../components/Answer/Answer", () => ({
+vi.mock("../../components/Answer/Answer", () => ({
   Answer: (props: any) => {
     return <div>Answer component</div>;
   },
 }));
 
-jest.mock("../../components/ChatMessageContainer/ChatMessageContainer", () => ({
+vi.mock("../../components/ChatMessageContainer/ChatMessageContainer", () => ({
   ChatMessageContainer: jest.fn((props: ChatMessageContainerProps) => {
     const {
       fetchingConvMessages,
@@ -168,7 +170,7 @@ jest.mock("../../components/ChatMessageContainer/ChatMessageContainer", () => ({
   }),
 }));
 
-jest.mock("../../components/CitationPanel/CitationPanel", () => ({
+vi.mock("../../components/CitationPanel/CitationPanel", () => ({
   CitationPanel: (props: any) => {
     return (
       <div>
@@ -179,7 +181,7 @@ jest.mock("../../components/CitationPanel/CitationPanel", () => ({
   },
 }));
 
-jest.mock("../../components/ChatHistoryPanel/ChatHistoryPanel", () => ({
+vi.mock("../../components/ChatHistoryPanel/ChatHistoryPanel", () => ({
   ChatHistoryPanel: (props: ChatHistoryPanelProps) => {
     return (
       <>
@@ -205,13 +207,13 @@ jest.mock("../../components/ChatHistoryPanel/ChatHistoryPanel", () => ({
   },
 }));
 
-const mockCallConversationApi = api.callConversationApi as jest.Mock;
-const mockGetAssistantTypeApi = api.getAssistantTypeApi as jest.Mock;
-const mockGetHistoryList = api.historyList as jest.Mock;
-const mockHistoryUpdateApi = api.historyUpdate as jest.Mock;
+const mockCallConversationApi = api.callConversationApi as Mock;
+const mockGetAssistantTypeApi = api.getAssistantTypeApi as Mock;
+const mockGetHistoryList = api.historyList as Mock;
+const mockHistoryUpdateApi = api.historyUpdate as Mock;
 const mockedMultiLingualSpeechRecognizer =
-  multiLingualSpeechRecognizer as jest.Mock;
-const mockHistoryRead = api.historyRead as jest.Mock;
+  multiLingualSpeechRecognizer as Mock;
+const mockHistoryRead = api.historyRead as Mock;
 
 const createFetchResponse = (ok: boolean, data: any) => {
   return {
@@ -279,7 +281,7 @@ const initialAPICallsMocks = (
   mockGetAssistantTypeApi.mockResolvedValueOnce({
     ai_assistant_type: "default",
   });
-  (api.getFrontEndSettings as jest.Mock).mockResolvedValueOnce({
+  (api.getFrontEndSettings as Mock).mockResolvedValueOnce({
     CHAT_HISTORY_ENABLED: true,
   });
   mockGetHistoryList.mockResolvedValueOnce(chatHistoryListData);

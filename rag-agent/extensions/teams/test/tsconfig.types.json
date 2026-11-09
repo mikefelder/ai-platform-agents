@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "tsBuildInfoFile": "../lib/.types.tsbuildinfo"
+  },
+  "include": ["zod-types.ts"]
+}
